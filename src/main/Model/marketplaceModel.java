@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 
 @Entity
 @Table(name = tbl_marketplace)
-public class marketplaceModel implements Serializable {
+public class MarketplaceModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
