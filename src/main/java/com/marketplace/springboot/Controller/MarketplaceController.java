@@ -1,5 +1,8 @@
 package com.marketplace.springboot.Controller;
 
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +15,7 @@ import com.marketplace.springboot.Repository.MarketplaceRepository;
 
 import jakarta.validation.Valid;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -21,6 +25,11 @@ public class MarketplaceController {
     
     @Autowired
     MarketplaceRepository marketplaceRepository;
+
+    	@GetMapping("/products")
+	public ResponseEntity<List<MarketplaceModel>> getAllProducts(){
+		return ResponseEntity.status(HttpStatus.OK).body(marketplaceRepository.findAll());
+		}
 
     @PostMapping("/products")
     public ResponseEntity <MarketplaceModel> saveMarketplace (@RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
