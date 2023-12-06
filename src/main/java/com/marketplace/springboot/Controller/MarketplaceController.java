@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +22,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
+@RequestMapping("/api")
+@ApiOperation(value = "Marketplace API REST")
+@CrossOrigin(origins = "*")
 public class MarketplaceController {
 
     @Autowired
     MarketplaceRepository marketplaceRepository;
 
     @GetMapping("/products")
+    @ApiOperation("Retrieve a list of all products available in the marketplace.")
     public ResponseEntity<List<MarketplaceModel>> getAllProducts() {
         List<MarketplaceModel> productsList = marketplaceRepository.findAll();
         if (!productsList.isEmpty()) {
@@ -38,6 +44,7 @@ public class MarketplaceController {
     }
 
     @GetMapping("/product/{id}")
+    @ApiOperation("Retrieve details of a specific product by its ID.")
     public ResponseEntity<Object> getOneProduct(@PathVariable(value = "id") UUID id) {
         Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
         if (productO.isEmpty()) {
@@ -48,6 +55,7 @@ public class MarketplaceController {
     }
 
     @PostMapping("/products")
+    @ApiOperation("Save a new product with the provided details.")
     public ResponseEntity<MarketplaceModel> saveProduct(
             @RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
         var marketplaceModel = new MarketplaceModel();
@@ -56,6 +64,7 @@ public class MarketplaceController {
     }
 
     @DeleteMapping("/product/{id}")
+    @ApiOperation("Delete a product with the specified ID.")
     public ResponseEntity<Object> deleteProduct(@PathVariable(value = "id") UUID id) {
         Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
         if (productO.isEmpty()) {
@@ -66,6 +75,7 @@ public class MarketplaceController {
     }
 
     @PutMapping("/products/{id}")
+    @ApiOperation("Update details of a product with the specified ID.")
     public ResponseEntity<Object> updateProduct(@PathVariable(value = "id") UUID id,
                                                 @RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
         Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
