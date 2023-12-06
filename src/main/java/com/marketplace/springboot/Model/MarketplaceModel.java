@@ -9,10 +9,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.springframework.hateoas.RepresentationModel;
 
 @Entity
 @Table(name = "tbl_marketplace")
-public class MarketplaceModel implements Serializable {
+public class MarketplaceModel extends RepresentationModel<MarketplaceModel> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
