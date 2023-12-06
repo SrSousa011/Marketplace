@@ -54,7 +54,7 @@ public class MarketplaceController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with ID " + id + "  not found.");
         }
         marketplaceRepository.delete(productO.get());
-        return ResponseEntity.status(HttpStatus.OK).body("Product with ID " + id + " successfully deleted .");
+        return ResponseEntity.status(HttpStatus.OK).body("Product with ID " + id + " successfully deleted.");
     }
 
     @PutMapping("/products/{id}")
