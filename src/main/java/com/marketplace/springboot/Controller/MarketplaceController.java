@@ -47,7 +47,7 @@ public class MarketplaceController {
 
 
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/product/{id}")
     public ResponseEntity<Object> deleteProduct(@PathVariable(value="id") UUID id) {
         Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
         if(productO.isEmpty()) {
