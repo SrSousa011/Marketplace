@@ -8,18 +8,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.marketplace.springboot.DTO.MakerteplaceRecordDto;
 import com.marketplace.springboot.Model.MarketplaceModel;
 import com.marketplace.springboot.Repository.MarketplaceRepository;
 
 import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -49,5 +44,19 @@ public class MarketplaceController {
         BeanUtils.copyProperties(makerteplaceRecordDto, marketplaceModel);       
 		return ResponseEntity.status(HttpStatus.CREATED).body(marketplaceRepository.save(marketplaceModel));
     }
+
+    @PutMapping("/products/{id}")
+    public ResponseEntity<Object> updateProduct(@PathVariable(value="id") UUID id,
+                                                @RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
+        Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
+        if(productO.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found.");
+        }
+        var marketplaceModel = productO.get();
+        BeanUtils.copyProperties(makerteplaceRecordDto, marketplaceModel);
+        return ResponseEntity.status(HttpStatus.OK).body(marketplaceRepository.save(marketplaceModel));
+    }
+
+}
 
 }
