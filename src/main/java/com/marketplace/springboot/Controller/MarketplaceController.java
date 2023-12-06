@@ -38,7 +38,7 @@ public class MarketplaceController {
     public ResponseEntity<Object> getOneProduct(@PathVariable(value="id") UUID id){
         Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
         if(productO.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with ID " + id + "not found.");
         }
         return ResponseEntity.status(HttpStatus.OK).body(productO.get());
     }
