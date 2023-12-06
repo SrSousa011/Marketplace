@@ -16,6 +16,9 @@ import com.marketplace.springboot.Repository.MarketplaceRepository;
 
 import jakarta.validation.Valid;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 public class MarketplaceController {
 
@@ -24,7 +27,14 @@ public class MarketplaceController {
 
     @GetMapping("/products")
     public ResponseEntity<List<MarketplaceModel>> getAllProducts() {
-        return ResponseEntity.status(HttpStatus.OK).body(marketplaceRepository.findAll());
+        List<MarketplaceModel> productsList = marketplaceRepository.findAll();
+        if (!productsList.isEmpty()) {
+            for (MarketplaceModel product : productsList) {
+                UUID id = product.getProductId();
+                product.add(linkTo(methodOn(MarketplaceController.class).getOneProduct(id)).withSelfRel());
+            }
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(productsList);
     }
 
     @GetMapping("/product/{id}")
@@ -33,6 +43,7 @@ public class MarketplaceController {
         if (productO.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with ID " + id + " not found.");
         }
+        productO.get().add(linkTo(methodOn(MarketplaceController.class).getAllProducts()).withRel("Products List"));
         return ResponseEntity.status(HttpStatus.OK).body(productO.get());
     }
 
