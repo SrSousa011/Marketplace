@@ -45,12 +45,24 @@ public class MarketplaceController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(marketplaceRepository.save(marketplaceModel));
     }
 
+
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<Object> deleteProduct(@PathVariable(value="id") UUID id) {
+        Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
+        if(productO.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with ID" + id + "  not found.");
+        }
+        marketplaceRepository.delete(productO.get());
+        return ResponseEntity.status(HttpStatus.OK).body("Product with ID" + id + " successfully deleted .");
+    }
+
     @PutMapping("/products/{id}")
     public ResponseEntity<Object> updateProduct(@PathVariable(value="id") UUID id,
                                                 @RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
         Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
         if(productO.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with ID " + id + "not found.");
         }
         var marketplaceModel = productO.get();
         BeanUtils.copyProperties(makerteplaceRecordDto, marketplaceModel);
