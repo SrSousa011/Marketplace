@@ -34,7 +34,7 @@ public class MarketplaceController {
 		}
 
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/product/{id}")
     public ResponseEntity<Object> getOneProduct(@PathVariable(value="id") UUID id){
         Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
         if(productO.isEmpty()) {
