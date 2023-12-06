@@ -21,7 +21,7 @@ public class MarketplaceModel implements Serializable {
     private UUID productId;
 
     private String name;
-    private BigDecimal value;
+    private BigDecimal price;
 
 
     public UUID getProductId() {
@@ -36,11 +36,11 @@ public class MarketplaceModel implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-    public BigDecimal getValue() {
-        return value;
+    public BigDecimal getPrice() {
+        return price;
     }
-    public void setValue(BigDecimal value) {
-        this.value = value;
+    public void setPrice(BigDecimal value) {
+        this.price = value;
     }
 
     
