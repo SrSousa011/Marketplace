@@ -16,57 +16,53 @@ import com.marketplace.springboot.Repository.MarketplaceRepository;
 
 import jakarta.validation.Valid;
 
-
 @RestController
 public class MarketplaceController {
-    
+
     @Autowired
     MarketplaceRepository marketplaceRepository;
 
-    	@GetMapping("/products")
-	public ResponseEntity<List<MarketplaceModel>> getAllProducts(){
-		return ResponseEntity.status(HttpStatus.OK).body(marketplaceRepository.findAll());
-		}
-
+    @GetMapping("/products")
+    public ResponseEntity<List<MarketplaceModel>> getAllProducts() {
+        return ResponseEntity.status(HttpStatus.OK).body(marketplaceRepository.findAll());
+    }
 
     @GetMapping("/product/{id}")
-    public ResponseEntity<Object> getOneProduct(@PathVariable(value="id") UUID id){
+    public ResponseEntity<Object> getOneProduct(@PathVariable(value = "id") UUID id) {
         Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
-        if(productO.isEmpty()) {
+        if (productO.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with ID " + id + " not found.");
         }
         return ResponseEntity.status(HttpStatus.OK).body(productO.get());
     }
 
     @PostMapping("/products")
-    public ResponseEntity <MarketplaceModel> saveProduct (@RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
+    public ResponseEntity<MarketplaceModel> saveProduct(
+            @RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
         var marketplaceModel = new MarketplaceModel();
-        BeanUtils.copyProperties(makerteplaceRecordDto, marketplaceModel);       
-		return ResponseEntity.status(HttpStatus.CREATED).body(marketplaceRepository.save(marketplaceModel));
+        BeanUtils.copyProperties(makerteplaceRecordDto, marketplaceModel);
+        return ResponseEntity.status(HttpStatus.CREATED).body(marketplaceRepository.save(marketplaceModel));
     }
 
-
-
     @DeleteMapping("/product/{id}")
-    public ResponseEntity<Object> deleteProduct(@PathVariable(value="id") UUID id) {
+    public ResponseEntity<Object> deleteProduct(@PathVariable(value = "id") UUID id) {
         Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
-        if(productO.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with ID " + id + "  not found.");
+        if (productO.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with ID " + id + " not found.");
         }
         marketplaceRepository.delete(productO.get());
         return ResponseEntity.status(HttpStatus.OK).body("Product with ID " + id + " successfully deleted.");
     }
 
     @PutMapping("/products/{id}")
-    public ResponseEntity<Object> updateProduct(@PathVariable(value="id") UUID id,
+    public ResponseEntity<Object> updateProduct(@PathVariable(value = "id") UUID id,
                                                 @RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
         Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
-        if(productO.isEmpty()) {
+        if (productO.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with ID " + id + " not found.");
         }
         var marketplaceModel = productO.get();
         BeanUtils.copyProperties(makerteplaceRecordDto, marketplaceModel);
         return ResponseEntity.status(HttpStatus.OK).body(marketplaceRepository.save(marketplaceModel));
     }
-
 }
