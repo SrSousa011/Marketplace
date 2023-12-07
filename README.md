@@ -42,20 +42,32 @@ Before you begin, ensure you have the following installed on your machine:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/marketplace-spring-boot.git
+    git clone https://github.com/SrSousa011/marketplace-api.git
 2. Open the project in your IDE.
 3. Build the project:
 
    ```bash
-   mvn clean install
+   mvn clean install   
+   
 
-4. Run the application:
+4. Run the application:   
 
    ```bash
-   mvn spring-boot:run
+   java -jar target/marketplace-api-1.0.jar
+
+
+
+### Swagger Documentation
+Explore the API using Swagger documentation. Visit 
+
+    
+    http://localhost:8080/swagger-ui/index.html
+    
+
 
 ### Usage
-Once the application is running, you can access the API endpoints to interact with the marketplace.
+Once the application is running, you can access the API en
+dpoints to interact with the marketplace.
 
 • API Endpoints
 • GET /products: Get a list of all products.
