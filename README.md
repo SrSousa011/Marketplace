@@ -70,10 +70,15 @@ Once the application is running, you can access the API en
 dpoints to interact with the marketplace.
 
 • API Endpoints
+
 • GET /products: Get a list of all products.
+
 • GET /product/{id}: Get details of a specific product by ID.
+                                         
 • POST /products: Add a new product.
+
 • PUT /products/{id}: Update an existing product by ID.
+
 • DELETE /product/{id}: Delete a product by ID.
 
 ### Contributing
