@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+
+import com.marketplace.springboot.Service.MarketplaceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -31,6 +31,9 @@ public class MarketplaceController {
 
     @Autowired
     MarketplaceRepository marketplaceRepository;
+
+    @Autowired
+    private MarketplaceService marketplaceService;
 
     @GetMapping("/products")
     @Operation(summary = "Retrieve a list of all products")

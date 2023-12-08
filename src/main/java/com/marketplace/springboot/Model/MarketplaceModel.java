@@ -43,6 +43,4 @@ public class MarketplaceModel extends RepresentationModel<MarketplaceModel> impl
     public void setPrice(BigDecimal value) {
         this.price = value;
     }
-
-    
 }
