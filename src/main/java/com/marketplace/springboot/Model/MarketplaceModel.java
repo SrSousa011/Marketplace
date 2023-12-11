@@ -9,8 +9,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
-
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "tbl_marketplace")
 public class MarketplaceModel extends RepresentationModel<MarketplaceModel> implements Serializable {
@@ -20,31 +26,6 @@ public class MarketplaceModel extends RepresentationModel<MarketplaceModel> impl
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID productId;
-
     private String name;
     private BigDecimal price;
-
-    public UUID getProductId() {
-        return productId;
-    }
-
-    public void setProductId(UUID productId) {
-        this.productId = productId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal value) {
-        this.price = value;
-    }
 }
