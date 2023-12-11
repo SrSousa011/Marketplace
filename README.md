@@ -1,6 +1,6 @@
 # Marketplace Spring Boot Project
 
-Explore the Marketplace Spring Boot Project, an illustrative project of a sophisticated marketplace application crafted with the power of Spring Boot. Immerse yourself in the intricacies of modern web development as we showcase comprehensive features, seamless CRUD operations, and the elegance of HATEOAS integration. Whether you're a developer seeking inspiration or an enthusiast eager to understand the dynamic
+The Marketplace API is a RESTful web service designed to manage products in a marketplace. It provides endpoints for creating, updating, retrieving, and deleting products. Additionally, it includes robust exception handling for common scenarios such as not found entities and deleted users.
 
 
 ## Table of Contents
@@ -65,30 +65,57 @@ Explore the API using Swagger documentation. Visit
     
 
 
-### Usage
-Once the application is running, you can access the API en
-dpoints to interact with the marketplace.
+### API Endpoints
 
-• API Endpoints
+**Update Product** <br/>
+• Endpoint: _PUT /products/{id}_ <br/>
+• Description: Update details of a product with the specified ID. <br/>
+• Request Body:
 
-• GET /products: Get a list of all products.
+        {
+        "name": "New Product Name",
+        "price": 19.99
+        }
 
-• GET /product/{id}: Get details of a specific product by ID.
-                                         
-• POST /products: Add a new product.
+**GET All Products**<br/>
+• Endpoint: _GET /products_<br/>
+• Description: Retrieve details of a specific product by its ID.<br/>
 
-• PUT /products/{id}: Update an existing product by ID.
 
-• DELETE /product/{id}: Delete a product by ID.
+**Get One Product**<br/>
+• Endpoint: _GET /product/{id}_<br/>
+• Description: Retrieve details of a specific product by its ID.<br/>
+
+
+**Save Product**<br/>
+• Endpoint: _POST /product/{id}_<br/>
+• Description: Update details of a product with the specified ID.**<br/>
+
+**DELETE Product** <br/>
+• Endpoint: _DELETE /product/{id}_<br/>
+• Description: Delete a product with the specified ID.<br/>
+
+
+### Exception Handling
+The Marketplace API includes robust exception handling for various scenarios. Notable exceptions include:<br/>
+
+• NotFoundException: Thrown when an entity is not found.<br/>
+• DeletedUserException: Thrown when attempting to delete a non-existent user.<br/>
+Customized error responses are provided for each exception type.<br/>
+
+### Built With
+• [Spring Boot](https://spring.io/projects/spring-boot) - Framework for building Java-based enterprise applications.<br/>
+• [Swagger](https://swagger.io) - API documentation tool.<br/>
+• [HATEOAS](https://spring.io/projects/spring-hateoas) - Hypermedia as the engine of application state.<br/>
 
 ### Contributing
-If you'd like to contribute to the project, please follow these steps:
+If you'd like to contribute to the project, please follow these steps: <br/>
 
 1. Fork the repository.
-2. Create a new branch: **git checkout -b feature/your-feature**.
-3. Commit your changes: **git commit -m 'Add some feature**.
-4. Push to the branch: **git push origin feature/your-feature**.
-5. Submit a pull request.
+2. Create a new branch: **git checkout -b feature/your-feature**. <br/>
+3. Commit your changes: **git commit -m 'Add some feature**. <br/>
+4. Push to the branch: **git push origin feature/your-feature**. <br/>
+5. Submit a pull request. <br/><br/><br/>
 
 ### License
 This project is licensed under the MIT License - see the LICENSE file for details.
