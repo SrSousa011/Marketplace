@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
 import com.marketplace.springboot.Service.MarketplaceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,14 +18,12 @@ import com.marketplace.springboot.DTO.MakerteplaceRecordDto;
 import com.marketplace.springboot.Model.MarketplaceModel;
 import com.marketplace.springboot.Repository.MarketplaceRepository;
 
-
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/")
 @Tag(name = "Marketplace API REST", description = "Endpoints for managing marketplace products.")
-
 public class MarketplaceController {
 
     @Autowired
@@ -92,4 +89,3 @@ public class MarketplaceController {
         return ResponseEntity.status(HttpStatus.OK).body(marketplaceRepository.save(marketplaceModel));
     }
 }
-

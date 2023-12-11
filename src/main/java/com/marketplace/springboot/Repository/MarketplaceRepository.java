@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import com.marketplace.springboot.Model.MarketplaceModel;
 
-
 @Repository
 public interface MarketplaceRepository extends JpaRepository<MarketplaceModel, UUID> {
 

@@ -1,6 +1,5 @@
 package com.marketplace.springboot.Service.Impl;
 
-
 import com.marketplace.springboot.DTO.MakerteplaceRecordDto;
 import com.marketplace.springboot.Model.MarketplaceModel;
 import com.marketplace.springboot.Repository.MarketplaceRepository;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 @Service
 public class MarketplaceServiceImpl implements MarketplaceService {
 

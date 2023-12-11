@@ -14,5 +14,3 @@ public interface MarketplaceService {
     MarketplaceModel update(UUID id, MakerteplaceRecordDto makerteplaceRecordDto);
     void delete(UUID id);
 }
-
-
