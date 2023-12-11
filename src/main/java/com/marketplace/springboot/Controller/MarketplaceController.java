@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.marketplace.springboot.Exception.Impl.DeletedUserException;
+import com.marketplace.springboot.Exception.Impl.NotFoundException;
 import com.marketplace.springboot.Service.MarketplaceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,35 +40,48 @@ public class MarketplaceController {
                                                 @RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
         Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
         if (productO.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with ID " + id + " not found.");
+            throw new NotFoundException("Product");
         }
+
         var marketplaceModel = productO.get();
         BeanUtils.copyProperties(makerteplaceRecordDto, marketplaceModel);
+
         return ResponseEntity.status(HttpStatus.OK).body(marketplaceRepository.save(marketplaceModel));
     }
 
     @GetMapping("/products")
     @Operation(summary = "Retrieve a list of all products")
     public ResponseEntity<List<MarketplaceModel>> getAllProducts() {
-        List<MarketplaceModel> productsList = marketplaceRepository.findAll();
-        if (!productsList.isEmpty()) {
+        try {
+            List<MarketplaceModel> productsList = marketplaceService.getAllProducts();
+
             for (MarketplaceModel product : productsList) {
                 UUID id = product.getProductId();
                 product.add(linkTo(methodOn(MarketplaceController.class).getOneProduct(id)).withSelfRel());
             }
+
+            return ResponseEntity.status(HttpStatus.OK).body(productsList);
+
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(productsList);
     }
 
     @GetMapping("/product/{id}")
     @Operation(summary = "Retrieve details of a specific product by its ID.")
     public ResponseEntity<Object> getOneProduct(@PathVariable(value = "id") UUID id) {
         Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
-        if (productO.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with ID " + id + " not found.");
+
+        try {
+            marketplaceService.delete(id);
+            productO.get().add(linkTo(methodOn(MarketplaceController.class).getAllProducts()).withRel("Products List"));
+            return ResponseEntity.status(HttpStatus.OK).body(productO.get());
+
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (DeletedUserException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-        productO.get().add(linkTo(methodOn(MarketplaceController.class).getAllProducts()).withRel("Products List"));
-        return ResponseEntity.status(HttpStatus.OK).body(productO.get());
     }
 
     @PostMapping("/products")
@@ -81,11 +96,13 @@ public class MarketplaceController {
     @DeleteMapping("/product/{id}")
     @Operation(summary = "Delete a product with the specified ID.")
     public ResponseEntity<Object> deleteProduct(@PathVariable(value = "id") UUID id) {
-        Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
-        if (productO.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with ID " + id + " not found.");
+        try {
+            marketplaceService.delete(id);
+            return ResponseEntity.status(HttpStatus.OK).body("Product with ID " + id + " successfully deleted.");
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (DeletedUserException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-        marketplaceRepository.delete(productO.get());
-        return ResponseEntity.status(HttpStatus.OK).body("Product with ID " + id + " successfully deleted.");
     }
 }

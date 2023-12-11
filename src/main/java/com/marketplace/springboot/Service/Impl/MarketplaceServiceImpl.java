@@ -1,6 +1,8 @@
 package com.marketplace.springboot.Service.Impl;
 
 import com.marketplace.springboot.DTO.MakerteplaceRecordDto;
+import com.marketplace.springboot.Exception.Impl.DeletedUserException;
+import com.marketplace.springboot.Exception.Impl.NotFoundException;
 import com.marketplace.springboot.Model.MarketplaceModel;
 import com.marketplace.springboot.Repository.MarketplaceRepository;
 import com.marketplace.springboot.Service.MarketplaceService;
@@ -19,8 +21,9 @@ public class MarketplaceServiceImpl implements MarketplaceService {
     public MarketplaceServiceImpl(MarketplaceRepository marketplaceRepository) {
         this.marketplaceRepository = marketplaceRepository;
     }
+
     @Transactional
-    public MarketplaceModel update(UUID id, MakerteplaceRecordDto makerteplaceRecordDto) {
+    public MarketplaceModel update(UUID id, MakerteplaceRecordDto makerteplaceRecordDto) throws NotFoundException {
         Optional<MarketplaceModel> existingProduct = marketplaceRepository.findById(id);
 
         if (existingProduct.isPresent()) {
@@ -30,7 +33,7 @@ public class MarketplaceServiceImpl implements MarketplaceService {
 
             return marketplaceRepository.save(updatedProduct);
         } else {
-            return null;
+            throw new NotFoundException("User with ID " + id);
         }
     }
 
@@ -41,16 +44,39 @@ public class MarketplaceServiceImpl implements MarketplaceService {
 
     @Transactional
     public List<MarketplaceModel> getAllProducts() {
-        return marketplaceRepository.findAll();
+        List<MarketplaceModel> productsList = marketplaceRepository.findAll();
+        if (productsList.isEmpty()) {
+            throw new NotFoundException("No products has been found");
+        }
+        return productsList;
     }
 
     @Transactional
-    public Optional<MarketplaceModel> findById(UUID id) {
+    public Optional<MarketplaceModel> findById(UUID id) throws NotFoundException {
+        Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
+
+        if (productO.isEmpty()) {
+            throw new NotFoundException("Product with ID " + id);
+        }
+
         return marketplaceRepository.findById(id);
     }
 
     @Transactional
-    public void delete(UUID id) {
-        marketplaceRepository.deleteById(id);
+    public void delete(UUID id) throws DeletedUserException, NotFoundException {
+        Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
+        if (productO.isEmpty()) {
+            throw new NotFoundException("Product with ID " + id);
+        }
+
+        try {
+            marketplaceRepository.delete(productO.get());
+            throw new DeletedUserException("User with ID " + id + " has been deleted.");
+        } catch (Exception e) {
+            throw new DeletedUserException("Failed to delete user with ID " + id + ".");
+        }
     }
+
 }
+
+
