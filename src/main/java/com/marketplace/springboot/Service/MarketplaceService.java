@@ -8,9 +8,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface MarketplaceService {
+    MarketplaceModel update(UUID id, MakerteplaceRecordDto makerteplaceRecordDto);
     List<MarketplaceModel> getAllProducts();
     Optional<MarketplaceModel> findById(UUID id);
     MarketplaceModel save(MarketplaceModel marketplaceModel);
-    MarketplaceModel update(UUID id, MakerteplaceRecordDto makerteplaceRecordDto);
     void delete(UUID id);
 }

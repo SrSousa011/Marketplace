@@ -19,6 +19,20 @@ public class MarketplaceServiceImpl implements MarketplaceService {
     public MarketplaceServiceImpl(MarketplaceRepository marketplaceRepository) {
         this.marketplaceRepository = marketplaceRepository;
     }
+    @Transactional
+    public MarketplaceModel update(UUID id, MakerteplaceRecordDto makerteplaceRecordDto) {
+        Optional<MarketplaceModel> existingProduct = marketplaceRepository.findById(id);
+
+        if (existingProduct.isPresent()) {
+            MarketplaceModel updatedProduct = existingProduct.get();
+            updatedProduct.setName(makerteplaceRecordDto.name());
+            updatedProduct.setPrice(makerteplaceRecordDto.price());
+
+            return marketplaceRepository.save(updatedProduct);
+        } else {
+            return null;
+        }
+    }
 
     @Transactional
     public MarketplaceModel save(MarketplaceModel marketplaceModel) {
@@ -33,21 +47,6 @@ public class MarketplaceServiceImpl implements MarketplaceService {
     @Transactional
     public Optional<MarketplaceModel> findById(UUID id) {
         return marketplaceRepository.findById(id);
-    }
-
-    @Transactional
-    public MarketplaceModel update(UUID id, MakerteplaceRecordDto makerteplaceRecordDto) {
-        Optional<MarketplaceModel> existingProduct = marketplaceRepository.findById(id);
-
-        if (existingProduct.isPresent()) {
-            MarketplaceModel updatedProduct = existingProduct.get();
-            updatedProduct.setName(makerteplaceRecordDto.name());
-            updatedProduct.setPrice(makerteplaceRecordDto.price());
-
-            return marketplaceRepository.save(updatedProduct);
-        } else {
-            return null;
-        }
     }
 
     @Transactional

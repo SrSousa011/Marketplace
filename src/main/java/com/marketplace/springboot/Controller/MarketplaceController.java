@@ -32,6 +32,19 @@ public class MarketplaceController {
     @Autowired
     private MarketplaceService marketplaceService;
 
+    @PutMapping("/products/{id}")
+    @Operation(summary = "Update details of a product with the specified ID.")
+    public ResponseEntity<Object> updateProduct(@PathVariable(value = "id") UUID id,
+                                                @RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
+        Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
+        if (productO.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with ID " + id + " not found.");
+        }
+        var marketplaceModel = productO.get();
+        BeanUtils.copyProperties(makerteplaceRecordDto, marketplaceModel);
+        return ResponseEntity.status(HttpStatus.OK).body(marketplaceRepository.save(marketplaceModel));
+    }
+
     @GetMapping("/products")
     @Operation(summary = "Retrieve a list of all products")
     public ResponseEntity<List<MarketplaceModel>> getAllProducts() {
@@ -74,18 +87,5 @@ public class MarketplaceController {
         }
         marketplaceRepository.delete(productO.get());
         return ResponseEntity.status(HttpStatus.OK).body("Product with ID " + id + " successfully deleted.");
-    }
-
-    @PutMapping("/products/{id}")
-    @Operation(summary = "Update details of a product with the specified ID.")
-    public ResponseEntity<Object> updateProduct(@PathVariable(value = "id") UUID id,
-                                                @RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
-        Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
-        if (productO.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product with ID " + id + " not found.");
-        }
-        var marketplaceModel = productO.get();
-        BeanUtils.copyProperties(makerteplaceRecordDto, marketplaceModel);
-        return ResponseEntity.status(HttpStatus.OK).body(marketplaceRepository.save(marketplaceModel));
     }
 }
