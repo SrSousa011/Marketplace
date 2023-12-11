@@ -6,14 +6,15 @@ import com.marketplace.springboot.Model.MarketplaceModel;
 import com.marketplace.springboot.Repository.MarketplaceRepository;
 import com.marketplace.springboot.Service.MarketplaceService;
 import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+@Service
 public class MarketplaceServiceImpl implements MarketplaceService {
 
-    final MarketplaceRepository marketplaceRepository;
+    private final MarketplaceRepository marketplaceRepository;
 
     public MarketplaceServiceImpl(MarketplaceRepository marketplaceRepository) {
         this.marketplaceRepository = marketplaceRepository;
