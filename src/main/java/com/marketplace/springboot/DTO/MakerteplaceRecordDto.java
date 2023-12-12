@@ -10,9 +10,9 @@ public record MakerteplaceRecordDto(
         @NotBlank(message = "Invalid Name: Empty name")
         @Size(min = 3, max = 30, message = "Invalid Name: Must be of 3 - 30 characters")
         String name,
-        @NotBlank(message = "Invalid Price: Empty price")
-        @DecimalMin(value = "0.1", message = "Invalid Price: Must be greater than or equal to 0.1")
-        @NotNull BigDecimal price
+        @NotNull(message = "Invalid Price: Null price")
+        @DecimalMin(value = "0.1", inclusive = true, message = "Invalid Price: Must be greater than or equal to 0.1")
+        BigDecimal price
 
     //@Email(message = "Invalid email")
     //String email;

@@ -81,8 +81,7 @@ public class MarketplaceController {
 
     @PostMapping("/products")
     @Operation(summary = "Save a new product with the provided details.")
-    public ResponseEntity<MarketplaceModel> saveProduct(
-            @RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
+    public ResponseEntity<MarketplaceModel> saveProduct(@RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
         var marketplaceModel = new MarketplaceModel();
         BeanUtils.copyProperties(makerteplaceRecordDto, marketplaceModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(marketplaceService.save(marketplaceModel));
