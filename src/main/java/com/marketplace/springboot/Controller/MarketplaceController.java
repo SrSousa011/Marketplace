@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.marketplace.springboot.Exception.Impl.DeletedUserException;
+import com.marketplace.springboot.Exception.Impl.DeletedException;
 import com.marketplace.springboot.Exception.Impl.NotFoundException;
 import com.marketplace.springboot.Service.MarketplaceService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -95,7 +95,7 @@ public class MarketplaceController {
             return ResponseEntity.status(HttpStatus.OK).body("Product with ID " + id + " successfully deleted.");
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (DeletedUserException e) {
+        } catch (DeletedException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

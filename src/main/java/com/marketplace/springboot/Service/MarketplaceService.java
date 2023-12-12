@@ -1,7 +1,7 @@
 package com.marketplace.springboot.Service;
 
 import com.marketplace.springboot.DTO.MakerteplaceRecordDto;
-import com.marketplace.springboot.Exception.Impl.DeletedUserException;
+import com.marketplace.springboot.Exception.Impl.DeletedException;
 import com.marketplace.springboot.Exception.Impl.NotFoundException;
 import com.marketplace.springboot.Model.MarketplaceModel;
 
@@ -18,5 +18,5 @@ public interface MarketplaceService {
 
     Optional<MarketplaceModel> findById(UUID id) throws NotFoundException;
 
-    void delete(UUID id) throws DeletedUserException, NotFoundException;
+    void delete(UUID id) throws DeletedException, NotFoundException;
 }
