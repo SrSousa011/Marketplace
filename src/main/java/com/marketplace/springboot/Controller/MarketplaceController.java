@@ -38,15 +38,12 @@ public class MarketplaceController {
     @Operation(summary = "Update details of a product with the specified ID.")
     public ResponseEntity<Object> updateProduct(@PathVariable(value = "id") UUID id,
                                                 @RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
-        Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
-        if (productO.isEmpty()) {
-            throw new NotFoundException("Product");
+        try {
+            MarketplaceModel updatedProduct = marketplaceService.update(id, makerteplaceRecordDto);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
-
-        var marketplaceModel = productO.get();
-        BeanUtils.copyProperties(makerteplaceRecordDto, marketplaceModel);
-
-        return ResponseEntity.status(HttpStatus.OK).body(marketplaceRepository.save(marketplaceModel));
     }
 
     @GetMapping("/products")
@@ -56,8 +53,8 @@ public class MarketplaceController {
             List<MarketplaceModel> productsList = marketplaceService.getAllProducts();
 
             for (MarketplaceModel product : productsList) {
-                UUID id = product.getProductId();
-                product.add(linkTo(methodOn(MarketplaceController.class).getOneProduct(id)).withSelfRel());
+                UUID productId = product.getProductId();
+                product.add(linkTo(methodOn(MarketplaceController.class).getOneProduct(productId)).withSelfRel());
             }
 
             return ResponseEntity.status(HttpStatus.OK).body(productsList);
@@ -70,17 +67,15 @@ public class MarketplaceController {
     @GetMapping("/product/{id}")
     @Operation(summary = "Retrieve details of a specific product by its ID.")
     public ResponseEntity<Object> getOneProduct(@PathVariable(value = "id") UUID id) {
-        Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
+        Optional<MarketplaceModel> productO = marketplaceService.findById(id);
 
         try {
-            marketplaceService.delete(id);
+            marketplaceService.findById(id);
             productO.get().add(linkTo(methodOn(MarketplaceController.class).getAllProducts()).withRel("Products List"));
             return ResponseEntity.status(HttpStatus.OK).body(productO.get());
 
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (DeletedUserException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -90,7 +85,7 @@ public class MarketplaceController {
             @RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
         var marketplaceModel = new MarketplaceModel();
         BeanUtils.copyProperties(makerteplaceRecordDto, marketplaceModel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(marketplaceRepository.save(marketplaceModel));
+        return ResponseEntity.status(HttpStatus.CREATED).body(marketplaceService.save(marketplaceModel));
     }
 
     @DeleteMapping("/product/{id}")
