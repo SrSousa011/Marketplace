@@ -1,12 +1,14 @@
 package com.marketplace.springboot.DTO;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 
 @Builder
-public record MakerteplaceRecordDto(
+public record MarketplaceRecordDto(
+        UUID productId,
         @NotBlank(message = "Invalid Name: Empty name")
         @Size(min = 3, max = 30, message = "Invalid Name: Must be of 3 - 30 characters")
         String name,

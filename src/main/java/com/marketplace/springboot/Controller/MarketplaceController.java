@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.marketplace.springboot.DTO.MakerteplaceRecordDto;
+import com.marketplace.springboot.DTO.MarketplaceRecordDto;
 import com.marketplace.springboot.Model.MarketplaceModel;
 import com.marketplace.springboot.Repository.MarketplaceRepository;
 
@@ -34,17 +34,18 @@ public class MarketplaceController {
     @Autowired
     private MarketplaceService marketplaceService;
 
-    @PutMapping("/products/{id}")
+    @PutMapping("/product/{id}")
     @Operation(summary = "Update details of a product with the specified ID.")
     public ResponseEntity<Object> updateProduct(@PathVariable(value = "id") UUID id,
-                                                @RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
+                                                @RequestBody @Valid MarketplaceRecordDto marketplaceRecordDto) {
         try {
-            MarketplaceModel updatedProduct = marketplaceService.update(id, makerteplaceRecordDto);
-            return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+            MarketplaceModel updatedProduct = marketplaceService.update(id, marketplaceRecordDto);
+            return ResponseEntity.ok(updatedProduct);
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
 
     @GetMapping("/products")
     @Operation(summary = "Retrieve a list of all products")
@@ -81,9 +82,9 @@ public class MarketplaceController {
 
     @PostMapping("/products")
     @Operation(summary = "Save a new product with the provided details.")
-    public ResponseEntity<MarketplaceModel> saveProduct(@RequestBody @Valid MakerteplaceRecordDto makerteplaceRecordDto) {
+    public ResponseEntity<MarketplaceModel> saveProduct(@RequestBody @Valid MarketplaceRecordDto marketplaceRecordDto) {
         var marketplaceModel = new MarketplaceModel();
-        BeanUtils.copyProperties(makerteplaceRecordDto, marketplaceModel);
+        BeanUtils.copyProperties(marketplaceRecordDto, marketplaceModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(marketplaceService.save(marketplaceModel));
     }
 

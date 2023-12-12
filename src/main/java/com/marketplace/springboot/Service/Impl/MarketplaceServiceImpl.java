@@ -1,6 +1,6 @@
 package com.marketplace.springboot.Service.Impl;
 
-import com.marketplace.springboot.DTO.MakerteplaceRecordDto;
+import com.marketplace.springboot.DTO.MarketplaceRecordDto;
 import com.marketplace.springboot.Exception.Impl.DeletedException;
 import com.marketplace.springboot.Exception.Impl.DuplicatedException;
 import com.marketplace.springboot.Exception.Impl.NotFoundException;
@@ -8,6 +8,7 @@ import com.marketplace.springboot.Model.MarketplaceModel;
 import com.marketplace.springboot.Repository.MarketplaceRepository;
 import com.marketplace.springboot.Service.MarketplaceService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,29 +25,39 @@ public class MarketplaceServiceImpl implements MarketplaceService {
     }
 
     @Transactional
-    public MarketplaceModel update(UUID id, MakerteplaceRecordDto makerteplaceRecordDto) throws NotFoundException {
+    public MarketplaceModel update(UUID id, @Valid MarketplaceRecordDto marketplaceRecordDto) throws NotFoundException {
         Optional<MarketplaceModel> existingProduct = marketplaceRepository.findById(id);
 
         if (existingProduct.isPresent()) {
-            MarketplaceModel updatedProduct = existingProduct.get();
-            updatedProduct.setName(makerteplaceRecordDto.name());
-            updatedProduct.setPrice(makerteplaceRecordDto.price());
+            MarketplaceModel existingProductModel = existingProduct.get();
+            if (isAlreadyExisting(existingProductModel.getName(), marketplaceRecordDto.name())) {
+                throw new DuplicatedException("Product with name '" + marketplaceRecordDto.name() + "' already exists.");
+            }
+            existingProductModel.setName(marketplaceRecordDto.name());
+            existingProductModel.setPrice(marketplaceRecordDto.price());
 
-            return marketplaceRepository.save(updatedProduct);
+            return marketplaceRepository.save(existingProductModel);
         } else {
-            throw new NotFoundException("User with ID " + id);
+            throw new NotFoundException("Product with ID " + id);
         }
     }
 
+    private boolean isAlreadyExisting(String existingName, String newName) {
+        return !existingName.equals(newName) && marketplaceRepository.existsByName(newName);
+    }
+
+
+
+
     @Transactional
     public MarketplaceModel save(MarketplaceModel marketplaceModel) {
-        if (isDuplicate(marketplaceModel)) {
+        if (isAlreadyExisting(marketplaceModel)) {
             throw new DuplicatedException("Product with name '" + marketplaceModel.getName());
         }
         return marketplaceRepository.save(marketplaceModel);
     }
 
-    private boolean isDuplicate(MarketplaceModel marketplaceModel) {
+    private boolean isAlreadyExisting(MarketplaceModel marketplaceModel) {
         return marketplaceRepository.existsByName(marketplaceModel.getName());
     }
 
@@ -86,5 +97,3 @@ public class MarketplaceServiceImpl implements MarketplaceService {
     }
 
 }
-
-
