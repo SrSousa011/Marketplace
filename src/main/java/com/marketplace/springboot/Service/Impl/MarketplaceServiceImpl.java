@@ -2,6 +2,7 @@ package com.marketplace.springboot.Service.Impl;
 
 import com.marketplace.springboot.DTO.MakerteplaceRecordDto;
 import com.marketplace.springboot.Exception.Impl.DeletedException;
+import com.marketplace.springboot.Exception.Impl.DuplicatedException;
 import com.marketplace.springboot.Exception.Impl.NotFoundException;
 import com.marketplace.springboot.Model.MarketplaceModel;
 import com.marketplace.springboot.Repository.MarketplaceRepository;
@@ -39,7 +40,14 @@ public class MarketplaceServiceImpl implements MarketplaceService {
 
     @Transactional
     public MarketplaceModel save(MarketplaceModel marketplaceModel) {
+        if (isDuplicate(marketplaceModel)) {
+            throw new DuplicatedException("Product with name '" + marketplaceModel.getName());
+        }
         return marketplaceRepository.save(marketplaceModel);
+    }
+
+    private boolean isDuplicate(MarketplaceModel marketplaceModel) {
+        return marketplaceRepository.existsByName(marketplaceModel.getName());
     }
 
     @Transactional

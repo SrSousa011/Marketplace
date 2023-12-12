@@ -8,5 +8,5 @@ import com.marketplace.springboot.Model.MarketplaceModel;
 
 @Repository
 public interface MarketplaceRepository extends JpaRepository<MarketplaceModel, UUID> {
-
+    boolean existsByName(String name);
 }
