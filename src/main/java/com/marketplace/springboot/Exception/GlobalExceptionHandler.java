@@ -1,6 +1,7 @@
 package com.marketplace.springboot.Exception;
 
-import com.marketplace.springboot.Exception.Impl.DeletedUserException;
+import com.marketplace.springboot.Exception.Impl.DeletedException;
+import com.marketplace.springboot.Exception.Impl.DuplicatedException;
 import com.marketplace.springboot.Exception.Impl.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,9 +40,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(getErrorsMap(errors));
     }
 
-    @ExceptionHandler(DeletedUserException.class)
+    @ExceptionHandler(DeletedException.class)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Map<String, List<String>>> handleDeletedException(DeletedUserException ex) {
+    public ResponseEntity<Map<String, List<String>>> handleDeletedException(DeletedException ex) {
         List<String> errors = Collections.singletonList(ex.getMessage());
         return ResponseEntity.status(HttpStatus.OK).body(getErrorsMap(errors));
     }
@@ -58,5 +59,12 @@ public class GlobalExceptionHandler {
     public final ResponseEntity<Map<String, List<String>>> handleRuntimeExceptions(RuntimeException ex) {
         List<String> errors = Collections.singletonList(ex.getMessage());
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(DuplicatedException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<Map<String, List<String>>> handleDuplicatedExeption(DuplicatedException ex) {
+        List<String> errors = Collections.singletonList(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(getErrorsMap(errors));
     }
 }

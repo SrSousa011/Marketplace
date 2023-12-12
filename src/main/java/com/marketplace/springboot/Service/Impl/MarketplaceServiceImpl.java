@@ -1,7 +1,7 @@
 package com.marketplace.springboot.Service.Impl;
 
 import com.marketplace.springboot.DTO.MakerteplaceRecordDto;
-import com.marketplace.springboot.Exception.Impl.DeletedUserException;
+import com.marketplace.springboot.Exception.Impl.DeletedException;
 import com.marketplace.springboot.Exception.Impl.NotFoundException;
 import com.marketplace.springboot.Model.MarketplaceModel;
 import com.marketplace.springboot.Repository.MarketplaceRepository;
@@ -63,7 +63,7 @@ public class MarketplaceServiceImpl implements MarketplaceService {
     }
 
     @Transactional
-    public void delete(UUID id) throws DeletedUserException, NotFoundException {
+    public void delete(UUID id) throws DeletedException, NotFoundException {
         Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
         if (productO.isEmpty()) {
             throw new NotFoundException("Product with ID " + id);
@@ -71,9 +71,9 @@ public class MarketplaceServiceImpl implements MarketplaceService {
 
         try {
             marketplaceRepository.delete(productO.get());
-            throw new DeletedUserException("User with ID " + id + " has been deleted.");
+            throw new DeletedException("User with ID " + id + " has been deleted.");
         } catch (Exception e) {
-            throw new DeletedUserException("Failed to delete user with ID " + id + ".");
+            throw new DeletedException("Failed to delete user with ID " + id + ".");
         }
     }
 
