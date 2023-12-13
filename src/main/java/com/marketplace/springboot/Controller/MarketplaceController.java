@@ -32,11 +32,14 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Tag(name = "Marketplace API REST", description = "Endpoints for managing marketplace products.")
 public class MarketplaceController {
 
-    @Autowired
-    MarketplaceRepository marketplaceRepository;
+    private final MarketplaceRepository marketplaceRepository;
+    private final MarketplaceService marketplaceService;
 
     @Autowired
-    private MarketplaceService marketplaceService;
+    public MarketplaceController(MarketplaceRepository marketplaceRepository, MarketplaceService marketplaceService) {
+        this.marketplaceRepository = marketplaceRepository;
+        this.marketplaceService = marketplaceService;
+    }
 
     @PutMapping("/product/{id}")
     @Operation(summary = "Update details of a product with the specified ID.")
