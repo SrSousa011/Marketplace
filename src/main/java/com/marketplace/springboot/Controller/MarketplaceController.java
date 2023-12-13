@@ -1,5 +1,6 @@
 package com.marketplace.springboot.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
@@ -50,21 +52,28 @@ public class MarketplaceController {
 
     @GetMapping("/products")
     @Operation(summary = "Retrieve a list of all products")
-    public ResponseEntity<List<MarketplaceModel>> getAllProducts() {
+    public ResponseEntity<CollectionModel<EntityModel<MarketplaceModel>>> getAllProducts() {
         try {
             List<MarketplaceModel> productsList = marketplaceService.getAllProducts();
+            List<EntityModel<MarketplaceModel>> productsWithLinks = new ArrayList<>();
 
             for (MarketplaceModel product : productsList) {
                 UUID productId = product.getProductId();
-                product.add(linkTo(methodOn(MarketplaceController.class).getOneProduct(productId)).withSelfRel());
+                EntityModel<MarketplaceModel> productWithLink = EntityModel.of(product);
+                productWithLink.add(linkTo(methodOn(MarketplaceController.class).getOneProduct(productId)).withSelfRel());
+                productsWithLinks.add(productWithLink);
             }
 
-            return ResponseEntity.status(HttpStatus.OK).body(productsList);
+            CollectionModel<EntityModel<MarketplaceModel>> collectionModel = CollectionModel.of(productsWithLinks);
+            collectionModel.add(linkTo(methodOn(MarketplaceController.class).getAllProducts()).withSelfRel());
+
+            return ResponseEntity.status(HttpStatus.OK).body(collectionModel);
 
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
 
     @GetMapping("/product/{id}")
     @Operation(summary = "Retrieve details of a specific product by its ID.")
