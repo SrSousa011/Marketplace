@@ -52,7 +52,7 @@ public class MarketplaceController {
 
     @GetMapping("/products")
     @Operation(summary = "Retrieve a list of all products")
-    public ResponseEntity<CollectionModel<EntityModel<MarketplaceModel>>> getAllProducts() {
+    public ResponseEntity<?> getAllProducts() {
         try {
             List<MarketplaceModel> productsList = marketplaceService.getAllProducts();
             List<EntityModel<MarketplaceModel>> productsWithLinks = new ArrayList<>();
@@ -70,21 +70,27 @@ public class MarketplaceController {
             return ResponseEntity.status(HttpStatus.OK).body(collectionModel);
 
         } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
 
+
     @GetMapping("/product/{id}")
     @Operation(summary = "Retrieve details of a specific product by its ID.")
-    public ResponseEntity<EntityModel<Optional<MarketplaceModel>>> getOneProduct(@PathVariable(value = "id") UUID id) {
+    public ResponseEntity<Object> getOneProduct(@PathVariable(value = "id") UUID id) {
         try {
             Optional<MarketplaceModel> product = marketplaceService.getProductById(id);
-            EntityModel<Optional<MarketplaceModel>> resource = EntityModel.of(product);
-            resource.add(WebMvcLinkBuilder.linkTo(methodOn(MarketplaceController.class).getAllProducts()).withRel("Products List"));
-            return ResponseEntity.ok(resource);
+
+            if (product.isPresent()) {
+                EntityModel<Optional<MarketplaceModel>> resource = EntityModel.of(product);
+                resource.add(WebMvcLinkBuilder.linkTo(methodOn(MarketplaceController.class).getAllProducts()).withRel("Products List"));
+                return ResponseEntity.ok(resource);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found for ID: " + id);
+            }
         } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(EntityModel.of(Optional.empty()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
