@@ -71,7 +71,7 @@ public class MarketplaceServiceImpl implements MarketplaceService {
     }
 
     @Transactional
-    public Optional<MarketplaceModel> findById(UUID id) throws NotFoundException {
+    public Optional<MarketplaceModel> getProductById(UUID id) throws NotFoundException {
         Optional<MarketplaceModel> productO = marketplaceRepository.findById(id);
 
         if (productO.isEmpty()) {

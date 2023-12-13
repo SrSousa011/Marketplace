@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +48,6 @@ public class MarketplaceController {
         }
     }
 
-
     @GetMapping("/products")
     @Operation(summary = "Retrieve a list of all products")
     public ResponseEntity<List<MarketplaceModel>> getAllProducts() {
@@ -67,16 +68,14 @@ public class MarketplaceController {
 
     @GetMapping("/product/{id}")
     @Operation(summary = "Retrieve details of a specific product by its ID.")
-    public ResponseEntity<Object> getOneProduct(@PathVariable(value = "id") UUID id) {
-        Optional<MarketplaceModel> productO = marketplaceService.findById(id);
-
+    public ResponseEntity<EntityModel<Optional<MarketplaceModel>>> getOneProduct(@PathVariable(value = "id") UUID id) {
         try {
-            marketplaceService.findById(id);
-            productO.get().add(linkTo(methodOn(MarketplaceController.class).getAllProducts()).withRel("Products List"));
-            return ResponseEntity.status(HttpStatus.OK).body(productO.get());
-
+            Optional<MarketplaceModel> product = marketplaceService.getProductById(id);
+            EntityModel<Optional<MarketplaceModel>> resource = EntityModel.of(product);
+            resource.add(WebMvcLinkBuilder.linkTo(methodOn(MarketplaceController.class).getAllProducts()).withRel("Products List"));
+            return ResponseEntity.ok(resource);
         } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(EntityModel.of(Optional.empty()));
         }
     }
 
