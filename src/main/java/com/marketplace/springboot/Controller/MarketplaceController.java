@@ -11,6 +11,8 @@ import com.marketplace.springboot.Service.MarketplaceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -32,6 +34,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Tag(name = "Marketplace API REST", description = "Endpoints for managing marketplace products.")
 public class MarketplaceController {
 
+    private static final Logger logger = LoggerFactory.getLogger(MarketplaceController.class);
+
     private final MarketplaceRepository marketplaceRepository;
     private final MarketplaceService marketplaceService;
 
@@ -42,19 +46,20 @@ public class MarketplaceController {
     }
 
     @PutMapping("/product/{id}")
-    @Operation(summary = "Update details of a product with the specified ID.")
     public ResponseEntity<Object> updateProduct(@PathVariable(value = "id") UUID id,
                                                 @RequestBody @Valid MarketplaceRecordDto marketplaceRecordDto) {
         try {
             MarketplaceModel updatedProduct = marketplaceService.update(id, marketplaceRecordDto);
+            logger.info("Product with ID {} successfully updated.", id);
             return ResponseEntity.ok(updatedProduct);
         } catch (NotFoundException e) {
+            logger.error("Product update failed. {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
+
     @GetMapping("/products")
-    @Operation(summary = "Retrieve a list of all products")
     public ResponseEntity<?> getAllProducts() {
         try {
             List<MarketplaceModel> productsList = marketplaceService.getAllProducts();
@@ -70,29 +75,31 @@ public class MarketplaceController {
             CollectionModel<EntityModel<MarketplaceModel>> collectionModel = CollectionModel.of(productsWithLinks);
             collectionModel.add(linkTo(methodOn(MarketplaceController.class).getAllProducts()).withSelfRel());
 
+            logger.info("Retrieved a list of all products.");
             return ResponseEntity.status(HttpStatus.OK).body(collectionModel);
 
         } catch (NotFoundException e) {
+            logger.error("Error retrieving products. {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-
-
     @GetMapping("/product/{id}")
-    @Operation(summary = "Retrieve details of a specific product by its ID.")
     public ResponseEntity<Object> getOneProduct(@PathVariable(value = "id") UUID id) {
         try {
             Optional<MarketplaceModel> product = marketplaceService.getProductById(id);
 
             if (product.isPresent()) {
+                logger.info("Retrieved details of product with ID {}", id);
                 EntityModel<Optional<MarketplaceModel>> resource = EntityModel.of(product);
-                resource.add(WebMvcLinkBuilder.linkTo(methodOn(MarketplaceController.class).getAllProducts()).withRel("Products List"));
+                resource.add(linkTo(methodOn(MarketplaceController.class).getAllProducts()).withRel("Products List"));
                 return ResponseEntity.ok(resource);
             } else {
+                logger.warn("Product not found for ID: {}", id);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found for ID: " + id);
             }
         } catch (NotFoundException e) {
+            logger.error("Error retrieving product details. {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -100,21 +107,38 @@ public class MarketplaceController {
     @PostMapping("/products")
     @Operation(summary = "Save a new product with the provided details.")
     public ResponseEntity<MarketplaceModel> saveProduct(@RequestBody @Valid MarketplaceRecordDto marketplaceRecordDto) {
-        var marketplaceModel = new MarketplaceModel();
-        BeanUtils.copyProperties(marketplaceRecordDto, marketplaceModel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(marketplaceService.save(marketplaceModel));
+        try {
+            var marketplaceModel = new MarketplaceModel();
+            BeanUtils.copyProperties(marketplaceRecordDto, marketplaceModel);
+            MarketplaceModel savedProduct = marketplaceService.save(marketplaceModel);
+            logger.debug("Product saved successfully: {}", savedProduct);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+        } catch (Exception e) {
+            logger.error("Error saving product", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @DeleteMapping("/product/{id}")
-    @Operation(summary = "Delete a product with the specified ID.")
     public ResponseEntity<Object> deleteProduct(@PathVariable(value = "id") UUID id) {
         try {
             marketplaceService.delete(id);
+            logger.info("Product with ID {} successfully deleted.", id);
             return ResponseEntity.status(HttpStatus.OK).body("Product with ID " + id + " successfully deleted.");
         } catch (NotFoundException e) {
+            logger.error("Product deletion failed. {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (DeletedException e) {
+            logger.error("Product deletion failed. {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @ExceptionHandler({NotFoundException.class, DeletedException.class})
+    public ResponseEntity<Object> handleExceptions(Exception e) {
+        logger.error("Exception occurred", e);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }
