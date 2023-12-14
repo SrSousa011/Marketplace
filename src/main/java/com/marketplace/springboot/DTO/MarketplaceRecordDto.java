@@ -16,11 +16,11 @@ public record MarketplaceRecordDto(
         @NotNull(message = "Invalid Price: Null price")
         @DecimalMin(value = "0.1", inclusive = true, message = "Invalid Price: Must be greater than or equal to 0.1")
         BigDecimal price,
+        int quantityAvailable,
         @Email(message = "Invalid email")
         String email,
         @NotBlank(message = "Invalid password: Empty password")
         String password,
-        @NotNull(message = "Invalid createdAt: Null createdAt")
         LocalDateTime createdAt
 ) {
 }
