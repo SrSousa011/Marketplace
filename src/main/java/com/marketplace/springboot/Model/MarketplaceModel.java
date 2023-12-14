@@ -2,6 +2,7 @@ package com.marketplace.springboot.Model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Entity;
@@ -28,4 +29,7 @@ public class MarketplaceModel extends RepresentationModel<MarketplaceModel> impl
     private UUID productId;
     private String name;
     private BigDecimal price;
+    private String email;
+    private String password;
+    private LocalDateTime createdAt;
 }
