@@ -56,7 +56,6 @@ public class MarketplaceController {
         }
     }
 
-
     @GetMapping("/products")
     public ResponseEntity<?> getAllProducts() {
         try {
@@ -107,7 +106,14 @@ public class MarketplaceController {
     public ResponseEntity<MarketplaceModel> saveProduct(@RequestBody @Valid MarketplaceRecordDto marketplaceRecordDto) {
         try {
             var marketplaceModel = new MarketplaceModel();
-            BeanUtils.copyProperties(marketplaceRecordDto, marketplaceModel);
+            marketplaceModel.setProductId(marketplaceRecordDto.getProductId());
+            marketplaceModel.setName(marketplaceRecordDto.getName());
+            marketplaceModel.setPrice(marketplaceRecordDto.getPrice());
+            marketplaceModel.setQuantityAvailable(marketplaceRecordDto.getQuantityAvailable());
+            marketplaceModel.setEmail(marketplaceRecordDto.getEmail());
+            marketplaceModel.setPassword(marketplaceRecordDto.getPassword());
+            marketplaceModel.setCreatedAt(marketplaceRecordDto.getCreatedAt());
+
             MarketplaceModel savedProduct = marketplaceService.save(marketplaceModel);
             logger.debug("Product saved successfully: {}", savedProduct);
 

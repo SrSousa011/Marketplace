@@ -30,11 +30,14 @@ public class MarketplaceServiceImpl implements MarketplaceService {
 
         if (existingProduct.isPresent()) {
             MarketplaceModel existingProductModel = existingProduct.get();
-            if (isAlreadyExisting(existingProductModel.getName(), marketplaceRecordDto.name())) {
-                throw new DuplicatedException("Product with name '" + marketplaceRecordDto.name() + "' already exists.");
+            if (isAlreadyExisting(existingProductModel.getName(), marketplaceRecordDto.getName())) {
+                throw new DuplicatedException("Product with name '" + marketplaceRecordDto.getName() + "' already exists.");
             }
-            existingProductModel.setName(marketplaceRecordDto.name());
-            existingProductModel.setPrice(marketplaceRecordDto.price());
+            existingProductModel.setName(marketplaceRecordDto.getName());
+            existingProductModel.setPrice(marketplaceRecordDto.getPrice());
+            existingProductModel.setEmail(marketplaceRecordDto.getEmail());
+            existingProductModel.setQuantityAvailable(marketplaceRecordDto.getQuantityAvailable());
+            existingProductModel.setPassword(marketplaceRecordDto.getPassword());
 
             return marketplaceRepository.save(existingProductModel);
         } else {
@@ -45,9 +48,6 @@ public class MarketplaceServiceImpl implements MarketplaceService {
     private boolean isAlreadyExisting(String existingName, String newName) {
         return !existingName.equals(newName) && marketplaceRepository.existsByName(newName);
     }
-
-
-
 
     @Transactional
     public MarketplaceModel save(MarketplaceModel marketplaceModel) {

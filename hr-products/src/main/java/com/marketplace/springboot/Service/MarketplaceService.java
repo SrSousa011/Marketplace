@@ -12,7 +12,6 @@ import java.util.UUID;
 public interface MarketplaceService {
     MarketplaceModel update(UUID id, MarketplaceRecordDto marketplaceRecordDto) throws NotFoundException;
 
-
     MarketplaceModel save(MarketplaceModel marketplaceModel);
 
     List<MarketplaceModel> getAllProducts() throws NotFoundException;

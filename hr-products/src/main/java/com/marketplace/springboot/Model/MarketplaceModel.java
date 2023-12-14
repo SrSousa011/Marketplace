@@ -25,7 +25,7 @@ public class MarketplaceModel extends RepresentationModel<MarketplaceModel> impl
     private UUID productId;
     private String name;
     private BigDecimal price;
-    private int quantityAvailable;
+    private Integer quantityAvailable;
     private String email;
     private String password;
     private LocalDateTime createdAt;
