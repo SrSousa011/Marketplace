@@ -105,14 +105,7 @@ public class MarketplaceController {
     @Operation(summary = "Save a new product with the provided details.")
     public ResponseEntity<MarketplaceModel> saveProduct(@RequestBody @Valid MarketplaceRecordDto marketplaceRecordDto) {
         try {
-            var marketplaceModel = new MarketplaceModel();
-            marketplaceModel.setProductId(marketplaceRecordDto.getProductId());
-            marketplaceModel.setName(marketplaceRecordDto.getName());
-            marketplaceModel.setPrice(marketplaceRecordDto.getPrice());
-            marketplaceModel.setQuantityAvailable(marketplaceRecordDto.getQuantityAvailable());
-            marketplaceModel.setEmail(marketplaceRecordDto.getEmail());
-            marketplaceModel.setPassword(marketplaceRecordDto.getPassword());
-            marketplaceModel.setCreatedAt(marketplaceRecordDto.getCreatedAt());
+            var marketplaceModel = getMarketplaceModel(marketplaceRecordDto);
 
             MarketplaceModel savedProduct = marketplaceService.save(marketplaceModel);
             logger.debug("Product saved successfully: {}", savedProduct);
@@ -122,6 +115,18 @@ public class MarketplaceController {
             logger.error("Error saving product", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    private static MarketplaceModel getMarketplaceModel(MarketplaceRecordDto marketplaceRecordDto) {
+        var marketplaceModel = new MarketplaceModel();
+        marketplaceModel.setProductId(marketplaceRecordDto.getProductId());
+        marketplaceModel.setName(marketplaceRecordDto.getName());
+        marketplaceModel.setPrice(marketplaceRecordDto.getPrice());
+        marketplaceModel.setQuantityAvailable(marketplaceRecordDto.getQuantityAvailable());
+        marketplaceModel.setEmail(marketplaceRecordDto.getEmail());
+        marketplaceModel.setPassword(marketplaceRecordDto.getPassword());
+        marketplaceModel.setCreatedAt(marketplaceRecordDto.getCreatedAt());
+        return marketplaceModel;
     }
 
     @DeleteMapping("/product/{id}")
