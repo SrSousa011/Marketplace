@@ -5,11 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 @Getter
@@ -29,7 +25,12 @@ public class MarketplaceModel extends RepresentationModel<MarketplaceModel> impl
     private UUID productId;
     private String name;
     private BigDecimal price;
+    private int quantityAvailable;
     private String email;
     private String password;
     private LocalDateTime createdAt;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }
