@@ -63,7 +63,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicatedException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<Map<String, List<String>>> handleDuplicatedExeption(DuplicatedException ex) {
+    public ResponseEntity<Map<String, List<String>>> handleDuplicatedException(DuplicatedException ex) {
         List<String> errors = Collections.singletonList(ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(getErrorsMap(errors));
     }
