@@ -1,6 +1,7 @@
 package com.marketplace.springboot.DTO;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.validation.constraints.*;
@@ -14,16 +15,12 @@ public record MarketplaceRecordDto(
         String name,
         @NotNull(message = "Invalid Price: Null price")
         @DecimalMin(value = "0.1", inclusive = true, message = "Invalid Price: Must be greater than or equal to 0.1")
-        BigDecimal price
-
-    //@Email(message = "Invalid email")
-    //String email;
-    //@NotBlank(message = "Invalid Phone number: Empty number")
-    //@NotNull(message = "Invalid Phone number: Number is NULL")
-    //@Pattern(regexp = "^\\d{10}$", message = "Invalid phone number")
-    //String mobile;
-    //@Min(value = 1, message = "Invalid Age: Equals to zero or Less than zero")
-    //@Max(value = 100, message = "Invalid Age: Exceeds 100 years")
-    //Integer age;
+        BigDecimal price,
+        @Email(message = "Invalid email")
+        String email,
+        @NotBlank(message = "Invalid password: Empty password")
+        String password,
+        @NotNull(message = "Invalid createdAt: Null createdAt")
+        LocalDateTime createdAt
 ) {
 }
