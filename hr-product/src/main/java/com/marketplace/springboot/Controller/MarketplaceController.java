@@ -119,7 +119,7 @@ public class MarketplaceController {
         var marketplaceModel = new MarketplaceModel();
         marketplaceModel.setProductId(marketplaceRecordDto.getProductId());
         marketplaceModel.setProductName(marketplaceRecordDto.getName());
-        marketplaceModel.setPrice(marketplaceRecordDto.getPrice());
+        marketplaceModel.setProductPrice(marketplaceRecordDto.getPrice());
         marketplaceModel.setQuantityAvailable(marketplaceRecordDto.getQuantityAvailable());
         marketplaceModel.setEmail(marketplaceRecordDto.getEmail());
         marketplaceModel.setPassword(marketplaceRecordDto.getPassword());

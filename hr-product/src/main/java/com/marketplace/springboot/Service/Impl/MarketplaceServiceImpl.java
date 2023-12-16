@@ -34,7 +34,7 @@ public class MarketplaceServiceImpl implements MarketplaceService {
                 throw new DuplicatedException("Product with name '" + marketplaceRecordDto.getName() + "' already exists.");
             }
             existingProductModel.setProductName(marketplaceRecordDto.getName());
-            existingProductModel.setPrice(marketplaceRecordDto.getPrice());
+            existingProductModel.setProductPrice(marketplaceRecordDto.getPrice());
             existingProductModel.setEmail(marketplaceRecordDto.getEmail());
             existingProductModel.setQuantityAvailable(marketplaceRecordDto.getQuantityAvailable());
             existingProductModel.setPassword(marketplaceRecordDto.getPassword());

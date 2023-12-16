@@ -24,7 +24,7 @@ public class MarketplaceModel extends RepresentationModel<MarketplaceModel> impl
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID productId;
     private String productName;
-    private BigDecimal price;
+    private BigDecimal productPrice;
     private Integer quantityAvailable;
     private String email;
     private String password;
