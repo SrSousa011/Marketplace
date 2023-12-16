@@ -1,0 +1,28 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "HrUserApplication",
+            "request": "launch",
+            "mainClass": "com.marketplace.springboot.hruser.HrUserApplication",
+            "projectName": "hr-user"
+        },
+        {
+            "type": "java",
+            "name": "HrProductApplication",
+            "request": "launch",
+            "mainClass": "com.marketplace.springboot.HrProductApplication",
+            "projectName": "springboot"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-HrOrderItemApplication<hr-orderItem>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.marketplace.springboot.HrOrderItemApplication",
+            "projectName": "hr-orderItem",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
