@@ -1,12 +1,11 @@
 package com.marketplace.springboot.Model;
 
-
-import com.marketplace.springboot.Enum.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -16,19 +15,20 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "tbl_order")
-public class OrderModel implements Serializable {
+@Table(name = "tbl_user")
+public class UserModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID orderEntityId;
+    private UUID userId;
 
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    private String username;
 
-    private LocalDateTime orderDate;
+    private String email;
 
-    private BigDecimal totalPrice;
+    private String password;
+
+    private LocalDateTime createdAt;
 }

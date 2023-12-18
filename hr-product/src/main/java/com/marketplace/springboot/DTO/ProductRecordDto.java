@@ -10,7 +10,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MarketplaceRecordDto {
+public class ProductRecordDto {
         private UUID productId;
 
         @NotBlank(message = "Invalid Name: Empty name")
@@ -23,11 +23,8 @@ public class MarketplaceRecordDto {
 
         private Integer quantityAvailable;
 
-        @Email(message = "Invalid email")
-        private String email;
-
-        @NotBlank(message = "Invalid password: Empty password")
-        private String password;
+        @NotBlank(message = "Invalid description: Empty description")
+        private String description;
 
         private LocalDateTime createdAt;
 }

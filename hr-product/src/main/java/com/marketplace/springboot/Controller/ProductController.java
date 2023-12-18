@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import com.marketplace.springboot.Exception.Impl.DeletedException;
 import com.marketplace.springboot.Exception.Impl.NotFoundException;
-import com.marketplace.springboot.Service.MarketplaceService;
+import com.marketplace.springboot.Service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -20,9 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.marketplace.springboot.DTO.MarketplaceRecordDto;
-import com.marketplace.springboot.Model.MarketplaceModel;
-import com.marketplace.springboot.Repository.MarketplaceRepository;
+import com.marketplace.springboot.DTO.ProductRecordDto;
+import com.marketplace.springboot.Model.ProductModel;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -30,22 +29,22 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/")
 @Tag(name = "Marketplace API REST", description = "Endpoints for managing marketplace products.")
-public class MarketplaceController {
-    private static final Logger logger = LoggerFactory.getLogger(MarketplaceController.class);
-    private final MarketplaceRepository marketplaceRepository;
-    private final MarketplaceService marketplaceService;
+public class ProductController {
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+    private final ProductController productController;
+    private final ProductService productService;
 
     @Autowired
-    public MarketplaceController(MarketplaceRepository marketplaceRepository, MarketplaceService marketplaceService) {
-        this.marketplaceRepository = marketplaceRepository;
-        this.marketplaceService = marketplaceService;
+    public ProductController(ProductController productController, ProductService productService) {
+        this.productController = productController;
+        this.productService = productService;
     }
 
     @PutMapping("/product/{id}")
     public ResponseEntity<Object> updateProduct(@PathVariable(value = "id") UUID id,
-                                                @RequestBody @Valid MarketplaceRecordDto marketplaceRecordDto) {
+                                                @RequestBody @Valid ProductRecordDto productRecordDto) {
         try {
-            MarketplaceModel updatedProduct = marketplaceService.update(id, marketplaceRecordDto);
+            ProductModel updatedProduct = productService.update(id, productRecordDto);
             logger.info("Product with ID {} successfully updated.", id);
             return ResponseEntity.ok(updatedProduct);
         } catch (NotFoundException e) {
@@ -57,18 +56,18 @@ public class MarketplaceController {
     @GetMapping("/products")
     public ResponseEntity<?> getAllProducts() {
         try {
-            List<MarketplaceModel> productsList = marketplaceService.getAllProducts();
-            List<EntityModel<MarketplaceModel>> productsWithLinks = new ArrayList<>();
+            List<ProductModel> productsList = productService.getAllProducts();
+            List<EntityModel<ProductModel>> productsWithLinks = new ArrayList<>();
 
-            for (MarketplaceModel product : productsList) {
+            for (ProductModel product : productsList) {
                 UUID productId = product.getProductId();
-                EntityModel<MarketplaceModel> productWithLink = EntityModel.of(product);
-                productWithLink.add(linkTo(methodOn(MarketplaceController.class).getOneProduct(productId)).withSelfRel());
+                EntityModel<ProductModel> productWithLink = EntityModel.of(product);
+                productWithLink.add(linkTo(methodOn(ProductController.class).getOneProduct(productId)).withSelfRel());
                 productsWithLinks.add(productWithLink);
             }
 
-            CollectionModel<EntityModel<MarketplaceModel>> collectionModel = CollectionModel.of(productsWithLinks);
-            collectionModel.add(linkTo(methodOn(MarketplaceController.class).getAllProducts()).withSelfRel());
+            CollectionModel<EntityModel<ProductModel>> collectionModel = CollectionModel.of(productsWithLinks);
+            collectionModel.add(linkTo(methodOn(ProductController.class).getAllProducts()).withSelfRel());
 
             logger.info("Retrieved a list of all products.");
             return ResponseEntity.status(HttpStatus.OK).body(collectionModel);
@@ -82,12 +81,12 @@ public class MarketplaceController {
     @GetMapping("/product/{id}")
     public ResponseEntity<Object> getOneProduct(@PathVariable(value = "id") UUID id) {
         try {
-            Optional<MarketplaceModel> product = marketplaceService.getProductById(id);
+            Optional<ProductModel> product = productService.getProductById(id);
 
             if (product.isPresent()) {
                 logger.info("Retrieved details of product with ID {}", id);
-                EntityModel<Optional<MarketplaceModel>> resource = EntityModel.of(product);
-                resource.add(linkTo(methodOn(MarketplaceController.class).getAllProducts()).withRel("Products List"));
+                EntityModel<Optional<ProductModel>> resource = EntityModel.of(product);
+                resource.add(linkTo(methodOn(ProductController.class).getAllProducts()).withRel("Products List"));
                 return ResponseEntity.ok(resource);
             } else {
                 logger.warn("Product not found for ID: {}", id);
@@ -101,11 +100,11 @@ public class MarketplaceController {
 
     @PostMapping("/products")
     @Operation(summary = "Save a new product with the provided details.")
-    public ResponseEntity<MarketplaceModel> saveProduct(@RequestBody @Valid MarketplaceRecordDto marketplaceRecordDto) {
+    public ResponseEntity<ProductModel> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto) {
         try {
-            var marketplaceModel = getMarketplaceModel(marketplaceRecordDto);
+            var marketplaceModel = getMarketplaceModel(productRecordDto);
 
-            MarketplaceModel savedProduct = marketplaceService.save(marketplaceModel);
+            ProductModel savedProduct = productService.save(marketplaceModel);
             logger.debug("Product saved successfully: {}", savedProduct);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
@@ -115,22 +114,21 @@ public class MarketplaceController {
         }
     }
 
-    private static MarketplaceModel getMarketplaceModel(MarketplaceRecordDto marketplaceRecordDto) {
-        var marketplaceModel = new MarketplaceModel();
-        marketplaceModel.setProductId(marketplaceRecordDto.getProductId());
-        marketplaceModel.setProductName(marketplaceRecordDto.getName());
-        marketplaceModel.setProductPrice(marketplaceRecordDto.getPrice());
-        marketplaceModel.setQuantityAvailable(marketplaceRecordDto.getQuantityAvailable());
-        marketplaceModel.setEmail(marketplaceRecordDto.getEmail());
-        marketplaceModel.setPassword(marketplaceRecordDto.getPassword());
-        marketplaceModel.setCreatedAt(marketplaceRecordDto.getCreatedAt());
+    private static ProductModel getMarketplaceModel(ProductRecordDto productRecordDto) {
+        var marketplaceModel = new ProductModel();
+        marketplaceModel.setProductId(productRecordDto.getProductId());
+        marketplaceModel.setProductName(productRecordDto.getName());
+        marketplaceModel.setProductPrice(productRecordDto.getPrice());
+        marketplaceModel.setQuantityAvailable(productRecordDto.getQuantityAvailable());
+        marketplaceModel.setDescription(productRecordDto.getDescription());
+        marketplaceModel.setCreatedAt(productRecordDto.getCreatedAt());
         return marketplaceModel;
     }
 
     @DeleteMapping("/product/{id}")
     public ResponseEntity<Object> deleteProduct(@PathVariable(value = "id") UUID id) {
         try {
-            marketplaceService.delete(id);
+            productService.delete(id);
             logger.info("Product with ID {} successfully deleted.", id);
             return ResponseEntity.status(HttpStatus.OK).body("Product with ID " + id + " successfully deleted.");
         } catch (NotFoundException e) {

@@ -15,8 +15,8 @@ import org.springframework.hateoas.RepresentationModel;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "tbl_marketplace")
-public class MarketplaceModel extends RepresentationModel<MarketplaceModel> implements Serializable {
+@Table(name = "tbl_product")
+public class ProductModel extends RepresentationModel<ProductModel> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,8 +26,7 @@ public class MarketplaceModel extends RepresentationModel<MarketplaceModel> impl
     private String productName;
     private BigDecimal productPrice;
     private Integer quantityAvailable;
-    private String email;
-    private String password;
+    private String description;
     private LocalDateTime createdAt;
     @PrePersist
     protected void onCreate() {
