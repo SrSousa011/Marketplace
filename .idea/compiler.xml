@@ -7,17 +7,21 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="hr-orderItem" />
-        <module name="springboot" />
+        <module name="hr-product" />
         <module name="hr-user" />
+        <module name="hr-order" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="springboot" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="hr-orderItem" options="-parameters" />
+      <module name="hr-order" options="-parameters" />
+      <module name="hr-product" options="-parameters" />
       <module name="hr-user" options="-parameters" />
-      <module name="springboot" options="-parameters" />
+      <module name="springboot" options="" />
     </option>
   </component>
 </project>

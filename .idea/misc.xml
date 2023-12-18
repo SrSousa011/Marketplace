@@ -6,8 +6,9 @@
       <list>
         <option value="$PROJECT_DIR$/hr-products/pom.xml" />
         <option value="$PROJECT_DIR$/hr-user/pom.xml" />
-        <option value="$PROJECT_DIR$/hr-product/pom.xml" />
         <option value="$PROJECT_DIR$/hr-orderItem/pom.xml" />
+        <option value="$PROJECT_DIR$/hr-product/pom.xml" />
+        <option value="$PROJECT_DIR$/hr-order/pom.xml" />
       </list>
     </option>
     <option name="workspaceImportForciblyTurnedOn" value="true" />
