@@ -8,5 +8,5 @@ import com.marketplace.springboot.Model.ProductModel;
 
 @Repository
 public interface ProductRepository extends JpaRepository<ProductModel, UUID> {
-    boolean existsByName(String name);
+    boolean existsByProductName(String productName);
 }

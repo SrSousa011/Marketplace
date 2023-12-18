@@ -17,7 +17,6 @@ import java.util.UUID;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-
     private final ProductRepository productRepository;
 
     public ProductServiceImpl(ProductRepository productRepository) {
@@ -45,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private boolean isAlreadyExisting(String existingName, String newName) {
-        return !existingName.equals(newName) && productRepository.existsByName(newName);
+        return !existingName.equals(newName) && productRepository.existsByProductName(newName);
     }
 
     @Transactional
@@ -57,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private boolean isAlreadyExisting(ProductModel productModel) {
-        return productRepository.existsByName(productModel.getProductName());
+        return productRepository.existsByProductName(productModel.getProductName());
     }
 
     @Transactional

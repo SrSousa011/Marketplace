@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import com.marketplace.springboot.Exception.Impl.DeletedException;
 import com.marketplace.springboot.Exception.Impl.NotFoundException;
-import com.marketplace.springboot.Repository.ProductRepository;
 import com.marketplace.springboot.Service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,12 +32,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class ProductController {
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
     private final ProductService productService;
-    private final ProductRepository productRepository;
 
     @Autowired
-    public ProductController(ProductRepository productRepository, ProductService productService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.productRepository = productRepository;
     }
 
     @PutMapping("/product/{id}")
