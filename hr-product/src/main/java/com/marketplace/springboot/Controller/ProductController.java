@@ -15,7 +15,6 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -34,11 +33,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class ProductController {
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
     private final ProductService productService;
-
     private final ProductRepository productRepository;
 
     @Autowired
-    public ProductController( ProductRepository productRepository,ProductService productService) {
+    public ProductController(ProductRepository productRepository, ProductService productService) {
         this.productService = productService;
         this.productRepository = productRepository;
     }

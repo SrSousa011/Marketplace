@@ -10,9 +10,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ProductService {
-    ProductModel update(UUID id, ProductRecordDto productRecordDto) throws NotFoundException;
+    ProductModel update(UUID id, ProductRecordDto marketplaceRecordDto) throws NotFoundException;
 
-    ProductModel save(ProductModel productModel);
+    ProductModel save(ProductModel marketplaceModel);
 
     List<ProductModel> getAllProducts() throws NotFoundException;
 
