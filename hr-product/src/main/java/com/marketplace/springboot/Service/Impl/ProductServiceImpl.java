@@ -5,7 +5,7 @@ import com.marketplace.springboot.Exception.Impl.DeletedException;
 import com.marketplace.springboot.Exception.Impl.DuplicatedException;
 import com.marketplace.springboot.Exception.Impl.NotFoundException;
 import com.marketplace.springboot.Model.ProductModel;
-import com.marketplace.springboot.Repository.ProductController;
+import com.marketplace.springboot.Repository.ProductRepository;
 import com.marketplace.springboot.Service.ProductService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -18,15 +18,15 @@ import java.util.UUID;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final ProductController productController;
+    private final ProductRepository productRepository;
 
-    public ProductServiceImpl(ProductController productController) {
-        this.productController = productController;
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     @Transactional
     public ProductModel update(UUID id, @Valid ProductRecordDto productRecordDto) throws NotFoundException {
-        Optional<ProductModel> existingProduct = productController.findById(id);
+        Optional<ProductModel> existingProduct = productRepository.findById(id);
 
         if (existingProduct.isPresent()) {
             ProductModel existingProductModel = existingProduct.get();
@@ -38,14 +38,14 @@ public class ProductServiceImpl implements ProductService {
             existingProductModel.setDescription(productRecordDto.getDescription());
             existingProductModel.setQuantityAvailable(productRecordDto.getQuantityAvailable());
 
-            return productController.save(existingProductModel);
+            return productRepository.save(existingProductModel);
         } else {
             throw new NotFoundException("Product with ID " + id);
         }
     }
 
     private boolean isAlreadyExisting(String existingName, String newName) {
-        return !existingName.equals(newName) && productController.existsByName(newName);
+        return !existingName.equals(newName) && productRepository.existsByName(newName);
     }
 
     @Transactional
@@ -53,16 +53,16 @@ public class ProductServiceImpl implements ProductService {
         if (isAlreadyExisting(productModel)) {
             throw new DuplicatedException("Product with name '" + productModel.getProductName());
         }
-        return productController.save(productModel);
+        return productRepository.save(productModel);
     }
 
     private boolean isAlreadyExisting(ProductModel productModel) {
-        return productController.existsByName(productModel.getProductName());
+        return productRepository.existsByName(productModel.getProductName());
     }
 
     @Transactional
     public List<ProductModel> getAllProducts() {
-        List<ProductModel> productsList = productController.findAll();
+        List<ProductModel> productsList = productRepository.findAll();
         if (productsList.isEmpty()) {
             throw new NotFoundException("No products has been found");
         }
@@ -71,24 +71,24 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     public Optional<ProductModel> getProductById(UUID id) throws NotFoundException {
-        Optional<ProductModel> productO = productController.findById(id);
+        Optional<ProductModel> productO = productRepository.findById(id);
 
         if (productO.isEmpty()) {
             throw new NotFoundException("Product with ID " + id);
         }
 
-        return productController.findById(id);
+        return productRepository.findById(id);
     }
 
     @Transactional
     public void delete(UUID id) throws DeletedException, NotFoundException {
-        Optional<ProductModel> productO = productController.findById(id);
+        Optional<ProductModel> productO = productRepository.findById(id);
         if (productO.isEmpty()) {
             throw new NotFoundException("Product with ID " + id);
         }
 
         try {
-            productController.delete(productO.get());
+            productRepository.delete(productO.get());
             throw new DeletedException("User with ID " + id + " has been deleted.");
         } catch (Exception e) {
             throw new DeletedException("Failed to delete user with ID " + id + ".");

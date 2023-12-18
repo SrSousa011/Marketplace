@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import com.marketplace.springboot.Exception.Impl.DeletedException;
 import com.marketplace.springboot.Exception.Impl.NotFoundException;
+import com.marketplace.springboot.Repository.ProductRepository;
 import com.marketplace.springboot.Service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,6 +15,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -27,17 +29,18 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/products")
 @Tag(name = "Marketplace API REST", description = "Endpoints for managing marketplace products.")
 public class ProductController {
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
-    private final ProductController productController;
     private final ProductService productService;
 
+    private final ProductRepository productRepository;
+
     @Autowired
-    public ProductController(ProductController productController, ProductService productService) {
-        this.productController = productController;
+    public ProductController( ProductRepository productRepository,ProductService productService) {
         this.productService = productService;
+        this.productRepository = productRepository;
     }
 
     @PutMapping("/product/{id}")

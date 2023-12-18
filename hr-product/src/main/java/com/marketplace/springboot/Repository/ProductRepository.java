@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import com.marketplace.springboot.Model.ProductModel;
 
 @Repository
-public interface ProductController extends JpaRepository<ProductModel, UUID> {
+public interface ProductRepository extends JpaRepository<ProductModel, UUID> {
     boolean existsByName(String name);
 }
