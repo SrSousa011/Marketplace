@@ -7,17 +7,11 @@ import com.marketplace.springboot.hruser.Exception.Impl.DuplicatedException;
 import com.marketplace.springboot.hruser.Exception.Impl.NotFoundException;
 import com.marketplace.springboot.hruser.Repository.UserRepository;
 import com.marketplace.springboot.hruser.Service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.beans.PropertyDescriptor;
 import java.util.*;
@@ -54,7 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean isAlreadyExisting(UserModel userModel) {
-        return userRepository.existsByUserName(userModel.getUsername());
+        return userRepository.existsByUsername(userModel.getUsername());
     }
 
 
