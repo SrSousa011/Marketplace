@@ -115,8 +115,8 @@ public class ProductController {
     private static ProductModel getMarketplaceModel(ProductRecordDto productRecordDto) {
         var marketplaceModel = new ProductModel();
         marketplaceModel.setProductId(productRecordDto.getProductId());
-        marketplaceModel.setProductName(productRecordDto.getName());
-        marketplaceModel.setProductPrice(productRecordDto.getPrice());
+        marketplaceModel.setProductName(productRecordDto.getProductName());
+        marketplaceModel.setProductPrice(productRecordDto.getProductPrice());
         marketplaceModel.setQuantityAvailable(productRecordDto.getQuantityAvailable());
         marketplaceModel.setDescription(productRecordDto.getDescription());
         marketplaceModel.setCreatedAt(productRecordDto.getCreatedAt());

@@ -29,11 +29,11 @@ public class ProductServiceImpl implements ProductService {
 
         if (existingProduct.isPresent()) {
             ProductModel existingProductModel = existingProduct.get();
-            if (isAlreadyExisting(existingProductModel.getProductName(), productRecordDto.getName())) {
-                throw new DuplicatedException("Product with name '" + productRecordDto.getName() + "' already exists.");
+            if (isAlreadyExisting(existingProductModel.getProductName(), productRecordDto.getProductName())) {
+                throw new DuplicatedException("Product with name '" + productRecordDto.getProductName() + "' already exists.");
             }
-            existingProductModel.setProductName(productRecordDto.getName());
-            existingProductModel.setProductPrice(productRecordDto.getPrice());
+            existingProductModel.setProductName(productRecordDto.getProductName());
+            existingProductModel.setProductPrice(productRecordDto.getProductPrice());
             existingProductModel.setDescription(productRecordDto.getDescription());
             existingProductModel.setQuantityAvailable(productRecordDto.getQuantityAvailable());
 
@@ -88,9 +88,9 @@ public class ProductServiceImpl implements ProductService {
 
         try {
             productRepository.delete(productO.get());
-            throw new DeletedException("User with ID " + id + " has been deleted.");
+            throw new DeletedException("Product with ID " + id + " has been deleted.");
         } catch (Exception e) {
-            throw new DeletedException("Failed to delete user with ID " + id + ".");
+            throw new DeletedException("Failed to delete product with ID " + id + ".");
         }
     }
 
