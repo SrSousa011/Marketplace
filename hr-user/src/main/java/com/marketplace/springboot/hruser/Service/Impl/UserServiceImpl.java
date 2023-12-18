@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserModel saveUser(UserModel userModel) {
         if (isAlreadyExisting(userModel)) {
-            throw new DuplicatedException("Product with name '" + userModel.getUsername());
+            throw new DuplicatedException("Product with name " + userModel.getUsername());
         }
         return userRepository.save(userModel);
     }
