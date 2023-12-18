@@ -10,14 +10,21 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/users")
@@ -54,12 +61,24 @@ public class UserController {
     @Operation(summary = "Get a list of all users.")
     public ResponseEntity<?> getAllUsers() {
         try {
-            logger.info("Fetching all users");
             List<UserModel> usersList = userService.getAllUsers();
-            logger.info("Fetched {} users successfully", usersList.size());
-            return ResponseEntity.ok(usersList);
+            List<EntityModel<UserModel>> usersWithLinks = new ArrayList<>();
+
+            for (UserModel user : usersList) {
+                UUID userId = user.getUserId();
+                EntityModel<UserModel> userWithLink = EntityModel.of(user);
+                userWithLink.add(linkTo(methodOn(UserController.class).getOneUser(userId)).withSelfRel());
+                usersWithLinks.add(userWithLink);
+            }
+
+            CollectionModel<EntityModel<UserModel>> collectionModel = CollectionModel.of(usersWithLinks);
+            collectionModel.add(linkTo(methodOn(UserController.class).getAllUsers()).withSelfRel());
+
+            logger.info("Retrieved a list of all users.");
+            return ResponseEntity.status(HttpStatus.OK).body(collectionModel);
+
         } catch (NotFoundException e) {
-            logger.error("Failed to fetch users. Reason: {}", e.getMessage());
+            logger.error("Error retrieving users. {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -68,18 +87,19 @@ public class UserController {
     @Operation(summary = "Get details of a specific user.")
     public ResponseEntity<Object> getOneUser(@PathVariable(value = "id") UUID id) {
         try {
-            logger.info("Fetching details for user with ID: {}", id);
             Optional<UserModel> user = userService.getUserById(id);
 
             if (user.isPresent()) {
-                logger.info("User with ID {} found", id);
-                return ResponseEntity.ok(user.get());
+                logger.info("Retrieved details of user with ID {}", id);
+                EntityModel<Optional<UserModel>> resource = EntityModel.of(user);
+                resource.add(linkTo(methodOn(UserController.class).getAllUsers()).withRel("Users List"));
+                return ResponseEntity.ok(resource);
             } else {
                 logger.warn("User not found for ID: {}", id);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found for ID: " + id);
             }
         } catch (NotFoundException e) {
-            logger.error("Failed to fetch user details. Reason: {}", e.getMessage());
+            logger.error("Error retrieving user details. {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -89,10 +109,15 @@ public class UserController {
     public ResponseEntity<UserModel> saveUser(@RequestBody @Valid UserRecordDto userRecordDto) {
         try {
             logger.info("Saving a new user");
+
             var userModel = getUserModel(userRecordDto);
-            UserModel savedUser = userService.saveUser(userModel);
+            UserModel savedUser = userService.saveUser(userRecordDto);
+
+            EntityModel<UserModel> userWithLink = EntityModel.of(savedUser);
+            userWithLink.add(linkTo(methodOn(UserController.class).getOneUser(savedUser.getUserId())).withSelfRel());
+
             logger.info("User saved successfully with ID: {}", savedUser.getUserId());
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(userWithLink.getContent());
         } catch (Exception e) {
             logger.error("Failed to save user. Reason: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
