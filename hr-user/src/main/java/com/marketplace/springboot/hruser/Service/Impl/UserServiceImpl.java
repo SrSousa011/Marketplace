@@ -5,6 +5,7 @@ import com.marketplace.springboot.hruser.Dto.UserRecordDto;
 import com.marketplace.springboot.hruser.Exception.Impl.DeletedException;
 import com.marketplace.springboot.hruser.Exception.Impl.NotFoundException;
 import com.marketplace.springboot.hruser.Repository.UserRepository;
+import com.marketplace.springboot.hruser.Service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;

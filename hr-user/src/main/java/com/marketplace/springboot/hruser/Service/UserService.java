@@ -1,4 +1,4 @@
-package com.marketplace.springboot.hruser.Service.Impl;
+package com.marketplace.springboot.hruser.Service;
 
 import com.marketplace.springboot.Model.UserModel;
 import com.marketplace.springboot.hruser.Dto.UserRecordDto;
