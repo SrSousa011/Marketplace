@@ -8,6 +8,8 @@ import com.marketplace.springboot.hruser.Exception.Impl.NotFoundException;
 import com.marketplace.springboot.hruser.Repository.UserRepository;
 import com.marketplace.springboot.hruser.Service.UserService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -39,18 +41,22 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Transactional
-    public UserModel saveUser(UserModel userModel) {
-        if (isAlreadyExisting(userModel)) {
-            throw new DuplicatedException("Product with name " + userModel.getUsername());
+    public UserModel saveUser(UserRecordDto userRecordDto) {
+        if (isAlreadyExisting(userRecordDto.getUsername())) {
+            throw new DuplicatedException("User with name " + userRecordDto.getUsername() + " already exists");
         }
+
+        UserModel userModel = new UserModel();
+        userModel.setUsername(userRecordDto.getUsername());
+        userModel.setEmail(userRecordDto.getEmail());
+        userModel.setPassword(userRecordDto.getPassword());
+
         return userRepository.save(userModel);
     }
 
-    private boolean isAlreadyExisting(UserModel userModel) {
-        return userRepository.existsByUsername(userModel.getUsername());
+    private boolean isAlreadyExisting(String username) {
+        return userRepository.existsByUsername(username);
     }
-
 
     @Transactional
     public List<UserModel> getAllUsers() throws NotFoundException {

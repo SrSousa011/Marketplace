@@ -47,8 +47,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.OK).body(getErrorsMap(errors));
     }
 
-
-
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Map<String, List<String>>> handleGeneralExceptions(Exception ex) {
         List<String> errors = Collections.singletonList(ex.getMessage());
