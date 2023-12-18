@@ -1,8 +1,8 @@
 package com.marketplace.springboot.hruser.Exception;
 
-import com.marketplace.springboot.Exception.Impl.DeletedException;
-import com.marketplace.springboot.Exception.Impl.DuplicatedException;
-import com.marketplace.springboot.Exception.Impl.NotFoundException;
+import com.marketplace.springboot.hruser.Exception.Impl.DeletedException;
+import com.marketplace.springboot.hruser.Exception.Impl.DuplicatedException;
+import com.marketplace.springboot.hruser.Exception.Impl.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
