@@ -27,7 +27,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api")
 @Tag(name = "Marketplace API REST", description = "Endpoints for managing marketplace products.")
 public class ProductController {
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
@@ -96,7 +96,7 @@ public class ProductController {
         }
     }
 
-    @PostMapping("/products")
+    @PostMapping("/product")
     @Operation(summary = "Save a new product with the provided details.")
     public ResponseEntity<ProductModel> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto) {
         try {
@@ -136,12 +136,5 @@ public class ProductController {
             logger.error("Product deletion failed. {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-    }
-
-    @ExceptionHandler({NotFoundException.class, DeletedException.class})
-    public ResponseEntity<Object> handleExceptions(Exception e) {
-        logger.error("Exception occurred", e);
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 }
