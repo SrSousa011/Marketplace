@@ -27,7 +27,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping
+@RequestMapping("/")
 @Tag(name = "Marketplace API REST", description = "Endpoints for managing marketplace products.")
 public class ProductController {
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
