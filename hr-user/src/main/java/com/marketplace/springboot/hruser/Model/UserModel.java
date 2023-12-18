@@ -31,4 +31,9 @@ public class UserModel implements Serializable {
     private String password;
 
     private LocalDateTime createdAt;
+
+    @PrePersist
+    private void prePersist() {
+        createdAt = LocalDateTime.now();
+    }
 }
