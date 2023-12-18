@@ -9,7 +9,7 @@ import com.marketplace.springboot.Dto.OrderRecordDto;
 import com.marketplace.springboot.Exception.Impl.DeletedException;
 import com.marketplace.springboot.Exception.Impl.NotFoundException;
 import com.marketplace.springboot.Model.OrderModel;
-import com.marketplace.springboot.Repository.OrderRepository;
+import com.marketplace.springboot.Service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -26,20 +26,19 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/")
-@Tag(name = "Marketplace API REST", description = "Endpoints for managing marketplace products.")
+@RequestMapping("/api/orders")
+@Tag(name = "Marketplace API REST", description = "Endpoints for managing marketplace orders.")
 public class OrderController {
+
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
-    private final OrderRepository orderRepository;
     private final OrderService orderService;
 
     @Autowired
-    public OrderController(OrderRepository orderRepository, OrderService orderService) {
-        this.orderRepository = orderRepository;
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
-    @PutMapping("/order/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Object> updateOrder(
             @PathVariable(value = "id") UUID id,
             @RequestBody @Valid OrderRecordDto orderRecordDto
@@ -54,7 +53,7 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/orders")
+    @GetMapping
     public ResponseEntity<?> getAllOrders() {
         try {
             List<OrderModel> ordersList = orderService.getAllOrders();
@@ -79,7 +78,7 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/order/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getOneOrder(@PathVariable(value = "id") UUID id) {
         try {
             Optional<OrderModel> order = orderService.getOrderById(id);
@@ -99,7 +98,7 @@ public class OrderController {
         }
     }
 
-    @PostMapping("/orders")
+    @PostMapping
     @Operation(summary = "Save a new order with the provided details.")
     public ResponseEntity<OrderModel> saveOrder(@RequestBody @Valid OrderRecordDto orderRecordDto) {
         try {
@@ -115,7 +114,7 @@ public class OrderController {
         }
     }
 
-    @DeleteMapping("/order/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteOrder(@PathVariable(value = "id") UUID id) {
         try {
             orderService.deleteOrder(id);
@@ -134,5 +133,12 @@ public class OrderController {
     public ResponseEntity<Object> handleExceptions(Exception e) {
         logger.error("Exception occurred", e);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    private static OrderModel getOrderModel(OrderRecordDto orderRecordDto) {
+        return OrderModel.builder()
+                .status(orderRecordDto.getStatus())
+                .orderDate(orderRecordDto.getOrderDate())
+                .build();
     }
 }

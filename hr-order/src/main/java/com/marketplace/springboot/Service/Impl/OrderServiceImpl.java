@@ -5,6 +5,7 @@ import com.marketplace.springboot.Exception.Impl.DeletedException;
 import com.marketplace.springboot.Exception.Impl.NotFoundException;
 import com.marketplace.springboot.Model.OrderModel;
 import com.marketplace.springboot.Repository.OrderRepository;
+import com.marketplace.springboot.Service.OrderService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,6 @@ public class OrderServiceImpl implements OrderService {
 
         if (existingOrder.isPresent()) {
             OrderModel existingOrderModel = existingOrder.get();
-            // Perform any necessary validation or business logic here
             existingOrderModel.setStatus(orderRecordDto.getStatus());
             existingOrderModel.setOrderDate(orderRecordDto.getOrderDate());
 
@@ -37,11 +37,9 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    @Transactional
     public OrderModel saveOrder(OrderModel orderModel) {
         return orderRepository.save(orderModel);
     }
-
     @Transactional
     public List<OrderModel> getAllOrders() {
         List<OrderModel> ordersList = orderRepository.findAll();
