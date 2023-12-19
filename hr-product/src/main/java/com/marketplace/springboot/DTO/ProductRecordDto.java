@@ -10,6 +10,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ProductRecordDto {
         private UUID productId;
 
@@ -21,6 +22,7 @@ public class ProductRecordDto {
         @DecimalMin(value = "0.1", inclusive = true, message = "Invalid Price: Must be greater than or equal to 0.1")
         private BigDecimal productPrice;
 
+        @Positive(message = "Stock Quantity must be positive")
         private Integer stockQuantity;
 
         @NotBlank(message = "Invalid description: Empty description")
@@ -28,3 +30,4 @@ public class ProductRecordDto {
 
         private LocalDateTime createdAt;
 }
+
