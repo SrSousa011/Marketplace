@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserService {
-    UserModel updateUser(UUID id, UserRecordDto productRecordDto) throws ChangeSetPersister.NotFoundException;
+    UserModel updateUser(UUID id, UserRecordDto userRecordDto) throws ChangeSetPersister.NotFoundException;
 
     UserModel saveUser(UserRecordDto userRecordDto);
 

@@ -41,13 +41,16 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Transactional
     public UserModel saveUser(UserRecordDto userRecordDto) {
-        if (isAlreadyExisting(userRecordDto.getUsername())) {
-            throw new DuplicatedException("User with name " + userRecordDto.getUsername() + " already exists");
+        String username = userRecordDto.getUsername();
+
+        if (isAlreadyExisting(username)) {
+            throw new DuplicatedException("User with name '" + username + "' already exists");
         }
 
         UserModel userModel = new UserModel();
-        userModel.setUsername(userRecordDto.getUsername());
+        userModel.setUsername(username);
         userModel.setEmail(userRecordDto.getEmail());
         userModel.setPassword(userRecordDto.getPassword());
         userModel.setRole(userRecordDto.getRole());
