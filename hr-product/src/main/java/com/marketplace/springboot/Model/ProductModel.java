@@ -30,6 +30,7 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     private String description;
     private LocalDateTime createdAt;
 
+    @SuppressWarnings("unused")
     public void decreaseStockQuantity(int quantity) {
         if (quantity > 0 && quantity <= stockQuantity) {
             stockQuantity -= quantity;

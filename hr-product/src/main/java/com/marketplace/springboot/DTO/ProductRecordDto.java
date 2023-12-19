@@ -21,7 +21,7 @@ public class ProductRecordDto {
         @DecimalMin(value = "0.1", inclusive = true, message = "Invalid Price: Must be greater than or equal to 0.1")
         private BigDecimal productPrice;
 
-        private Integer quantityAvailable;
+        private Integer stockQuantity;
 
         @NotBlank(message = "Invalid description: Empty description")
         private String description;

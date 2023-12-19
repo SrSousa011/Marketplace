@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.marketplace.springboot.Exception.Impl.DeletedException;
+import com.marketplace.springboot.Exception.Impl.DuplicatedException;
 import com.marketplace.springboot.Exception.Impl.NotFoundException;
 import com.marketplace.springboot.Service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -100,13 +101,18 @@ public class ProductController {
     @Operation(summary = "Save a new product with the provided details.")
     public ResponseEntity<ProductModel> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto) {
         try {
-            var marketplaceModel = getMarketplaceModel(productRecordDto);
+            // No need to explicitly create the ProductModel, let the service handle it
+            ProductModel savedProduct = productService.save(productRecordDto);
 
-            ProductModel savedProduct = productService.save(marketplaceModel);
             logger.debug("Product saved successfully: {}", savedProduct);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+        } catch (DuplicatedException e) {
+            // Handle duplicated product name exception
+            logger.error("Error saving product due to duplication", e);
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } catch (Exception e) {
+            // Handle other exceptions
             logger.error("Error saving product", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -117,7 +123,7 @@ public class ProductController {
         marketplaceModel.setProductId(productRecordDto.getProductId());
         marketplaceModel.setProductName(productRecordDto.getProductName());
         marketplaceModel.setProductPrice(productRecordDto.getProductPrice());
-        marketplaceModel.setStockQuantity(productRecordDto.getQuantityAvailable());
+        marketplaceModel.setStockQuantity(productRecordDto.getStockQuantity());
         marketplaceModel.setDescription(productRecordDto.getDescription());
         marketplaceModel.setCreatedAt(productRecordDto.getCreatedAt());
         return marketplaceModel;

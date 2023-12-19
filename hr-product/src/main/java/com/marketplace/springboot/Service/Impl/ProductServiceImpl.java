@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
             existingProductModel.setProductName(productRecordDto.getProductName());
             existingProductModel.setProductPrice(productRecordDto.getProductPrice());
             existingProductModel.setDescription(productRecordDto.getDescription());
-            existingProductModel.setStockQuantity(productRecordDto.getQuantityAvailable());
+            existingProductModel.setStockQuantity(productRecordDto.getStockQuantity());
 
             return productRepository.save(existingProductModel);
         } else {
@@ -48,15 +48,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Transactional
-    public ProductModel save(ProductModel productModel) {
-        if (isAlreadyExisting(productModel)) {
-            throw new DuplicatedException("Product with name '" + productModel.getProductName());
+    public ProductModel save(ProductRecordDto productRecordDto) {
+        String productName = productRecordDto.getProductName();
+
+        if (isAlreadyExisting(productName)) {
+            throw new DuplicatedException("Product with name '" + productName + "' already exists");
         }
+
+        ProductModel productModel = new ProductModel();
+        productModel.setProductName(productRecordDto.getProductName());
+        productModel.setProductPrice(productRecordDto.getProductPrice());
+        productModel.setDescription(productRecordDto.getDescription());
+        productModel.setStockQuantity(productRecordDto.getStockQuantity());
+
         return productRepository.save(productModel);
     }
 
-    private boolean isAlreadyExisting(ProductModel productModel) {
-        return productRepository.existsByProductName(productModel.getProductName());
+    private boolean isAlreadyExisting(String productName) {
+        return productRepository.existsByProductName(productName);
     }
 
     @Transactional
