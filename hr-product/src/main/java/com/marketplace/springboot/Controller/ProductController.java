@@ -117,7 +117,7 @@ public class ProductController {
         marketplaceModel.setProductId(productRecordDto.getProductId());
         marketplaceModel.setProductName(productRecordDto.getProductName());
         marketplaceModel.setProductPrice(productRecordDto.getProductPrice());
-        marketplaceModel.setQuantityAvailable(productRecordDto.getQuantityAvailable());
+        marketplaceModel.setStockQuantity(productRecordDto.getQuantityAvailable());
         marketplaceModel.setDescription(productRecordDto.getDescription());
         marketplaceModel.setCreatedAt(productRecordDto.getCreatedAt());
         return marketplaceModel;

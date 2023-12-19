@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
             existingProductModel.setProductName(productRecordDto.getProductName());
             existingProductModel.setProductPrice(productRecordDto.getProductPrice());
             existingProductModel.setDescription(productRecordDto.getDescription());
-            existingProductModel.setQuantityAvailable(productRecordDto.getQuantityAvailable());
+            existingProductModel.setStockQuantity(productRecordDto.getQuantityAvailable());
 
             return productRepository.save(existingProductModel);
         } else {

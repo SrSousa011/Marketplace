@@ -25,7 +25,7 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     private UUID productId;
     private String productName;
     private BigDecimal productPrice;
-    private Integer quantityAvailable;
+    private Integer stockQuantity;
     private String description;
     private LocalDateTime createdAt;
     @PrePersist
