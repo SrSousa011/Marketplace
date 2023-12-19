@@ -39,7 +39,7 @@ public class ProductServiceImpl implements ProductService {
 
             return productRepository.save(existingProductModel);
         } else {
-            throw new NotFoundException("Product with ID " + id);
+            throw new NotFoundException("Product with ID " + id + " not found");
         }
     }
 
@@ -69,10 +69,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Transactional
-    public List<ProductModel> getAllProducts() {
+    public List<ProductModel> getAllProducts() throws NotFoundException {
         List<ProductModel> productsList = productRepository.findAll();
         if (productsList.isEmpty()) {
-            throw new NotFoundException("No products has been found");
+            throw new NotFoundException("No products have been found");
         }
         return productsList;
     }
@@ -82,25 +82,19 @@ public class ProductServiceImpl implements ProductService {
         Optional<ProductModel> productO = productRepository.findById(id);
 
         if (productO.isEmpty()) {
-            throw new NotFoundException("Product with ID " + id);
+            throw new NotFoundException("Product with ID " + id + " not found");
         }
 
-        return productRepository.findById(id);
+        return productO;
     }
 
     @Transactional
     public void delete(UUID id) throws DeletedException, NotFoundException {
         Optional<ProductModel> productO = productRepository.findById(id);
         if (productO.isEmpty()) {
-            throw new NotFoundException("Product with ID " + id);
+            throw new NotFoundException("Product with ID " + id + " not found");
         }
 
-        try {
-            productRepository.delete(productO.get());
-            throw new DeletedException("Product with ID " + id + " has been deleted.");
-        } catch (Exception e) {
-            throw new DeletedException("Failed to delete product with ID " + id + ".");
-        }
+        productRepository.delete(productO.get());
     }
-
 }
