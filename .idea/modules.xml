@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/hr-order/hr-order.iml" filepath="$PROJECT_DIR$/hr-order/hr-order.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hr-product/hr-product.iml" filepath="$PROJECT_DIR$/hr-product/hr-product.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/markplace-control-api.iml" filepath="$PROJECT_DIR$/.idea/markplace-control-api.iml" />
     </modules>
   </component>

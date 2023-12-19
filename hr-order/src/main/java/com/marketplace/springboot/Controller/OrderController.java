@@ -26,7 +26,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/orders")
 @Tag(name = "Marketplace API REST", description = "Endpoints for managing marketplace orders.")
 public class OrderController {
 
