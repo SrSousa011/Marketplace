@@ -2,6 +2,7 @@ package com.marketplace.springboot.Exception;
 
 import com.marketplace.springboot.Exception.Impl.DeletedException;
 import com.marketplace.springboot.Exception.Impl.DuplicatedException;
+import com.marketplace.springboot.Exception.Impl.InsufficientStockException;
 import com.marketplace.springboot.Exception.Impl.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -47,7 +48,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.OK).body(getErrorsMap(errors));
     }
 
-
+    @ExceptionHandler(InsufficientStockException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Map<String, List<String>>> handleInsufficientStockException(InsufficientStockException ex) {
+        List<String> errors = Collections.singletonList(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getErrorsMap(errors));
+    }
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Map<String, List<String>>> handleGeneralExceptions(Exception ex) {
