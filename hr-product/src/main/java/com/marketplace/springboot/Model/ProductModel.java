@@ -28,8 +28,9 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     private Integer stockQuantity;
     private String description;
     private LocalDateTime createdAt;
+
     @PrePersist
-    protected void onCreate() {
+    private void prePersist() {
         createdAt = LocalDateTime.now();
     }
 }
