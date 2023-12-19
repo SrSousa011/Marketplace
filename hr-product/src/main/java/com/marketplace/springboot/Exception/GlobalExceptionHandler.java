@@ -4,6 +4,7 @@ import com.marketplace.springboot.Exception.Impl.DeletedException;
 import com.marketplace.springboot.Exception.Impl.DuplicatedException;
 import com.marketplace.springboot.Exception.Impl.InsufficientStockException;
 import com.marketplace.springboot.Exception.Impl.NotFoundException;
+import com.marketplace.springboot.Exception.Impl.OtherSpecificException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,7 @@ public class GlobalExceptionHandler {
         errorResponse.put("errors", errors);
         return errorResponse;
     }
+
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Map<String, List<String>>> handleNotFoundException(NotFoundException ex) {
@@ -51,6 +53,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InsufficientStockException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Map<String, List<String>>> handleInsufficientStockException(InsufficientStockException ex) {
+        List<String> errors = Collections.singletonList(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getErrorsMap(errors));
+    }
+
+    @ExceptionHandler(OtherSpecificException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Map<String, List<String>>> handleOtherSpecificException(OtherSpecificException ex) {
         List<String> errors = Collections.singletonList(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getErrorsMap(errors));
     }
