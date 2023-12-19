@@ -101,32 +101,18 @@ public class ProductController {
     @Operation(summary = "Save a new product with the provided details.")
     public ResponseEntity<ProductModel> saveProduct(@RequestBody @Valid ProductRecordDto productRecordDto) {
         try {
-            // No need to explicitly create the ProductModel, let the service handle it
             ProductModel savedProduct = productService.save(productRecordDto);
 
             logger.debug("Product saved successfully: {}", savedProduct);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
         } catch (DuplicatedException e) {
-            // Handle duplicated product name exception
             logger.error("Error saving product due to duplication", e);
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         } catch (Exception e) {
-            // Handle other exceptions
             logger.error("Error saving product", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-    }
-
-    private static ProductModel getMarketplaceModel(ProductRecordDto productRecordDto) {
-        var marketplaceModel = new ProductModel();
-        marketplaceModel.setProductId(productRecordDto.getProductId());
-        marketplaceModel.setProductName(productRecordDto.getProductName());
-        marketplaceModel.setProductPrice(productRecordDto.getProductPrice());
-        marketplaceModel.setStockQuantity(productRecordDto.getStockQuantity());
-        marketplaceModel.setDescription(productRecordDto.getDescription());
-        marketplaceModel.setCreatedAt(productRecordDto.getCreatedAt());
-        return marketplaceModel;
     }
 
     @DeleteMapping("/product/{id}")
