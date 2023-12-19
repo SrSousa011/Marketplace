@@ -9,6 +9,7 @@ import com.marketplace.springboot.Exception.Impl.InsufficientStockException;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
+@SuppressWarnings("ALL")
 @Getter
 @Setter
 @ToString
@@ -17,7 +18,7 @@ import org.springframework.hateoas.RepresentationModel;
 @Builder
 @Entity
 @Table(name = "tbl_product")
-public class ProductModel extends RepresentationModel<ProductModel> implements Serializable {
+public class ProductModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,7 +31,6 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     private String description;
     private LocalDateTime createdAt;
 
-    @SuppressWarnings("unused")
     public void decreaseStockQuantity(int quantity) {
         if (quantity > 0 && quantity <= stockQuantity) {
             stockQuantity -= quantity;

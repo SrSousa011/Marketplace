@@ -1,6 +1,5 @@
 package com.marketplace.springboot.Controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -9,7 +8,7 @@ import java.util.stream.Collectors;
 import com.marketplace.springboot.Exception.Impl.DeletedException;
 import com.marketplace.springboot.Exception.Impl.DuplicatedException;
 import com.marketplace.springboot.Exception.Impl.NotFoundException;
-import com.marketplace.springboot.Exception.Impl.OtherSpecificException;
+import com.marketplace.springboot.Model.ProductModel;
 import com.marketplace.springboot.Service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.marketplace.springboot.DTO.ProductRecordDto;
-import com.marketplace.springboot.Model.ProductModel;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
