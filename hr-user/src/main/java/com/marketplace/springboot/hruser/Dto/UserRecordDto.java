@@ -30,6 +30,8 @@ public class UserRecordDto  {
     @Size(min = 8, max = 30, message = "Invalid Email: Must be of 3 - 30 characters")
     private String email;
 
+    private String role;
+
     private LocalDateTime createdAt;
 }
 

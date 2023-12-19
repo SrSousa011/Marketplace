@@ -30,6 +30,8 @@ public class UserModel implements Serializable {
 
     private String password;
 
+    private String role;
+
     private LocalDateTime createdAt;
 
     @PrePersist
